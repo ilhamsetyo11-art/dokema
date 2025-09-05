@@ -12,8 +12,7 @@ class DataMagangController extends Controller
 {
     public function index()
     {
-        $profil = ProfilPeserta::where('user_id', Auth::id())->first();
-        $magang = $profil ? $profil->dataMagang : collect();
+        $magang = \App\Models\DataMagang::all();
         return view('magang.magang.index', compact('magang'));
     }
 
