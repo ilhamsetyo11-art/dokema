@@ -2,22 +2,13 @@
     <x-slot name="header">
         Tambah Log Bimbingan
     </x-slot>
-    <div class="max-w-xl mx-auto mt-10 p-6 bg-white rounded shadow">
+    <div class="w-full md:w-7/12 xl:w-5/12 mx-auto mt-8 p-4 md:p-8 bg-white rounded shadow-md">
         <form action="{{ route('bimbingan.store', $magangId) }}" method="POST">
             @csrf
-            <div class="mb-4">
-                <x-input-label for="waktu_bimbingan" value="Waktu Bimbingan" />
-                <x-text-input type="datetime-local" name="waktu_bimbingan" id="waktu_bimbingan" class="w-full" required />
-            </div>
-            <div class="mb-4">
-                <x-input-label for="catatan_peserta" value="Catatan Peserta" />
-                <x-textarea name="catatan_peserta" id="catatan_peserta" class="w-full" />
-            </div>
-            <div class="mb-4">
-                <x-input-label for="catatan_pembimbing" value="Catatan Pembimbing" />
-                <x-textarea name="catatan_pembimbing" id="catatan_pembimbing" class="w-full" />
-            </div>
-            <x-primary-button type="submit">Simpan</x-primary-button>
+            <x-admin.form-input name="waktu_bimbingan" label="Waktu Bimbingan" type="datetime-local" required="true" />
+            <x-admin.form-textarea name="catatan_peserta" label="Catatan Peserta" />
+            <x-admin.form-textarea name="catatan_pembimbing" label="Catatan Pembimbing" />
+            <x-admin.form-button>Simpan</x-admin.form-button>
         </form>
     </div>
 </x-admin-layouts>

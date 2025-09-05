@@ -2,52 +2,31 @@
     <x-slot name="header">
         Tambah Data Magang
     </x-slot>
-    <div class="max-w-xl mx-auto mt-10 p-6 bg-white rounded shadow">
+    <div class="w-full md:w-7/12 xl:w-5/12 mx-auto mt-8 p-4 md:p-8 bg-white rounded shadow-md">
         <form action="{{ route('magang.store') }}" method="POST">
             @csrf
-            <div class="mb-4">
-                <x-input-label for="profil_peserta_id" value="Peserta" />
-                <select name="profil_peserta_id" id="profil_peserta_id" class="w-full border rounded px-3 py-2" required>
-                    <option value="">-- Pilih Peserta --</option>
-                    @foreach ($pesertas as $peserta)
-                        <option value="{{ $peserta->id }}">{{ $peserta->nim }} - {{ $peserta->universitas }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="mb-4">
-                <x-input-label for="pembimbing_id" value="Pembimbing" />
-                <select name="pembimbing_id" id="pembimbing_id" class="w-full border rounded px-3 py-2">
-                    <option value="">-- Pilih Pembimbing --</option>
-                    @foreach ($pembimbings as $pembimbing)
-                        <option value="{{ $pembimbing->id }}">{{ $pembimbing->name }} ({{ $pembimbing->email }})</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="mb-4">
-                <x-input-label for="path_surat_permohonan" value="Path Surat Permohonan" />
-                <x-text-input type="text" name="path_surat_permohonan" id="path_surat_permohonan" class="w-full" required />
-            </div>
-            <div class="mb-4">
-                <x-input-label for="path_surat_balasan" value="Path Surat Balasan" />
-                <x-text-input type="text" name="path_surat_balasan" id="path_surat_balasan" class="w-full" />
-            </div>
-            <div class="mb-4">
-                <x-input-label for="tanggal_mulai" value="Tanggal Mulai" />
-                <x-text-input type="date" name="tanggal_mulai" id="tanggal_mulai" class="w-full" required />
-            </div>
-            <div class="mb-4">
-                <x-input-label for="tanggal_selesai" value="Tanggal Selesai" />
-                <x-text-input type="date" name="tanggal_selesai" id="tanggal_selesai" class="w-full" required />
-            </div>
-            <div class="mb-4">
-                <x-input-label for="status" value="Status" />
-                <select name="status" id="status" class="w-full border rounded px-3 py-2">
-                    <option value="menunggu">Menunggu</option>
-                    <option value="diterima">Diterima</option>
-                    <option value="ditolak">Ditolak</option>
-                </select>
-            </div>
-            <x-primary-button type="submit">Simpan</x-primary-button>
+            <x-admin.form-select name="profil_peserta_id" label="Peserta" required="true">
+                <option value="">-- Pilih Peserta --</option>
+                @foreach ($pesertas as $peserta)
+                    <option value="{{ $peserta->id }}">{{ $peserta->nim }} - {{ $peserta->universitas }}</option>
+                @endforeach
+            </x-admin.form-select>
+            <x-admin.form-select name="pembimbing_id" label="Pembimbing">
+                <option value="">-- Pilih Pembimbing --</option>
+                @foreach ($pembimbings as $pembimbing)
+                    <option value="{{ $pembimbing->id }}">{{ $pembimbing->name }} ({{ $pembimbing->email }})</option>
+                @endforeach
+            </x-admin.form-select>
+            <x-admin.form-input name="path_surat_permohonan" label="Path Surat Permohonan" required="true" />
+            <x-admin.form-input name="path_surat_balasan" label="Path Surat Balasan" />
+            <x-admin.form-input name="tanggal_mulai" label="Tanggal Mulai" type="date" required="true" />
+            <x-admin.form-input name="tanggal_selesai" label="Tanggal Selesai" type="date" required="true" />
+            <x-admin.form-select name="status" label="Status">
+                <option value="menunggu">Menunggu</option>
+                <option value="diterima">Diterima</option>
+                <option value="ditolak">Ditolak</option>
+            </x-admin.form-select>
+            <x-admin.form-button>Simpan</x-admin.form-button>
         </form>
     </div>
 </x-admin-layouts>

@@ -2,22 +2,13 @@
     <x-slot name="header">
         Tambah Laporan Kegiatan
     </x-slot>
-    <div class="max-w-xl mx-auto mt-10 p-6 bg-white rounded shadow">
+    <div class="w-full md:w-7/12 xl:w-5/12 mx-auto mt-8 p-4 md:p-8 bg-white rounded shadow-md">
         <form action="{{ route('laporan.store', $magangId) }}" method="POST">
             @csrf
-            <div class="mb-4">
-                <x-input-label for="tanggal_laporan" value="Tanggal Laporan" />
-                <x-text-input type="date" name="tanggal_laporan" id="tanggal_laporan" class="w-full" required />
-            </div>
-            <div class="mb-4">
-                <x-input-label for="deskripsi" value="Deskripsi" />
-                <x-textarea name="deskripsi" id="deskripsi" class="w-full" required />
-            </div>
-            <div class="mb-4">
-                <x-input-label for="path_lampiran" value="Path Lampiran" />
-                <x-text-input type="text" name="path_lampiran" id="path_lampiran" class="w-full" />
-            </div>
-            <x-primary-button type="submit">Simpan</x-primary-button>
+            <x-admin.form-input name="tanggal_laporan" label="Tanggal Laporan" type="date" required="true" />
+            <x-admin.form-textarea name="deskripsi" label="Deskripsi" required="true" />
+            <x-admin.form-input name="path_lampiran" label="Path Lampiran" />
+            <x-admin.form-button>Simpan</x-admin.form-button>
         </form>
     </div>
 </x-admin-layouts>

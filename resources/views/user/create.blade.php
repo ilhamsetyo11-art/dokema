@@ -2,30 +2,18 @@
     <x-slot name="header">
         Tambah User
     </x-slot>
-    <div class="max-w-xl mx-auto mt-10 p-6 bg-white rounded shadow">
+    <div class="w-full md:w-7/12 xl:w-5/12 mx-auto mt-8 p-4 md:p-8 bg-white rounded shadow-md">
         <form action="{{ route('user.store') }}" method="POST">
             @csrf
-            <div class="mb-4">
-                <x-input-label for="name" value="Nama" />
-                <x-text-input type="text" name="name" id="name" class="w-full" required />
-            </div>
-            <div class="mb-4">
-                <x-input-label for="email" value="Email" />
-                <x-text-input type="email" name="email" id="email" class="w-full" required />
-            </div>
-            <div class="mb-4">
-                <x-input-label for="password" value="Password" />
-                <x-text-input type="password" name="password" id="password" class="w-full" required />
-            </div>
-            <div class="mb-4">
-                <x-input-label for="role" value="Role" />
-                <select name="role" id="role" class="w-full border rounded px-3 py-2">
-                    <option value="magang">Magang</option>
-                    <option value="hr">HR</option>
-                    <option value="pembimbing">Pembimbing</option>
-                </select>
-            </div>
-            <x-primary-button type="submit">Simpan</x-primary-button>
+            <x-admin.form-input name="name" label="Nama" required="true" />
+            <x-admin.form-input name="email" label="Email" type="email" required="true" />
+            <x-admin.form-input name="password" label="Password" type="password" required="true" />
+            <x-admin.form-select name="role" label="Role">
+                <option value="magang">Magang</option>
+                <option value="hr">HR</option>
+                <option value="pembimbing">Pembimbing</option>
+            </x-admin.form-select>
+            <x-admin.form-button>Simpan</x-admin.form-button>
         </form>
     </div>
 </x-admin-layouts>

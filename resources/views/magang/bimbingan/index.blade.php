@@ -2,29 +2,30 @@
     <x-slot name="header">
         Log Bimbingan
     </x-slot>
-    <div class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded shadow">
-        <a href="{{ route('bimbingan.create', $magangId) }}" class="mb-4 inline-block px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Tambah Log Bimbingan</a>
-        <table class="w-full border mt-4">
-            <thead class="bg-gray-100">
+    <div class="w-full md:w-11/12 xl:w-10/12 mx-auto mt-8 p-4 md:p-8 bg-white rounded shadow-md">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
+            <h2 class="text-lg font-semibold text-blue-900">Log Bimbingan</h2>
+            <a href="{{ route('bimbingan.create', $magangId) }}" class="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">Tambah Log Bimbingan</a>
+        </div>
+        <x-admin.table>
+            <x-slot name="thead">
                 <tr>
-                    <th class="p-2 border">Waktu Bimbingan</th>
-                    <th class="p-2 border">Catatan Peserta</th>
-                    <th class="p-2 border">Catatan Pembimbing</th>
+                    <th class="px-4 py-2 border">Waktu Bimbingan</th>
+                    <th class="px-4 py-2 border">Catatan Peserta</th>
+                    <th class="px-4 py-2 border">Catatan Pembimbing</th>
                 </tr>
-            </thead>
-            <tbody>
-                @forelse($log as $l)
-                    <tr>
-                        <td class="p-2 border">{{ $l->waktu_bimbingan }}</td>
-                        <td class="p-2 border">{{ $l->catatan_peserta }}</td>
-                        <td class="p-2 border">{{ $l->catatan_pembimbing }}</td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="3" class="p-2 border text-center text-gray-500">Belum ada log bimbingan</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+            </x-slot>
+            @forelse($log as $l)
+                <tr class="hover:bg-blue-50">
+                    <td class="px-4 py-2 border">{{ $l->waktu_bimbingan }}</td>
+                    <td class="px-4 py-2 border">{{ $l->catatan_peserta }}</td>
+                    <td class="px-4 py-2 border">{{ $l->catatan_pembimbing }}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="3" class="p-2 border text-center text-gray-500">Belum ada log bimbingan</td>
+                </tr>
+            @endforelse
+        </x-admin.table>
     </div>
 </x-admin-layouts>
