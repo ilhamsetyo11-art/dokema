@@ -53,4 +53,11 @@ class ProfilPesertaController extends Controller
         $profil->update($data);
         return redirect()->route('profil.index')->with('success', 'Profil berhasil diupdate');
     }
+
+    public function destroy()
+    {
+        $profil = ProfilPeserta::where('user_id', Auth::id())->firstOrFail();
+        $profil->delete();
+        return redirect()->route('profil.index')->with('success', 'Profil berhasil dihapus');
+    }
 }

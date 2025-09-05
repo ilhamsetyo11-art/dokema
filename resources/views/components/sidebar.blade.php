@@ -10,6 +10,12 @@
     </div>
     <nav class="mt-4 space-y-2 px-3">
         <div>
+            <a href="{{ route('user.index') }}" class="px-3 py-2 flex items-center rounded-sm {{ request()->routeIs('user.*') ? $activeClasses : $inactiveClasses }}">
+                <x-lucide-users class="h-5 w-5" />
+                <span class="mx-3">User</span>
+            </a>
+        </div>
+        <div>
             <a href="{{ route('profil.index') }}" class="px-3 py-2 flex items-center rounded-sm {{ request()->routeIs('profil.*') ? $activeClasses : $inactiveClasses }}">
                 <x-lucide-user class="h-5 w-5" />
                 <span class="mx-3">Profil</span>

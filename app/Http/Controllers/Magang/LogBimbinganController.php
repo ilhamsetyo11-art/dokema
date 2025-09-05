@@ -30,4 +30,29 @@ class LogBimbinganController extends Controller
         LogBimbingan::create($data);
         return redirect()->route('bimbingan.index', $magangId)->with('success', 'Log bimbingan berhasil dibuat');
     }
+
+    public function edit($magangId, $id)
+    {
+        $log = LogBimbingan::findOrFail($id);
+        return view('magang.bimbingan.edit', compact('log', 'magangId'));
+    }
+
+    public function update(Request $request, $magangId, $id)
+    {
+        $log = LogBimbingan::findOrFail($id);
+        $data = $request->validate([
+            'waktu_bimbingan' => 'required|date_format:Y-m-d H:i',
+            'catatan_peserta' => 'nullable',
+            'catatan_pembimbing' => 'nullable',
+        ]);
+        $log->update($data);
+        return redirect()->route('bimbingan.index', $magangId)->with('success', 'Log bimbingan berhasil diupdate');
+    }
+
+    public function destroy($magangId, $id)
+    {
+        $log = LogBimbingan::findOrFail($id);
+        $log->delete();
+        return redirect()->route('bimbingan.index', $magangId)->with('success', 'Log bimbingan berhasil dihapus');
+    }
 }
