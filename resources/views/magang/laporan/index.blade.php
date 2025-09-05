@@ -21,7 +21,18 @@
                 <tr class="hover:bg-blue-50">
                     <td class="px-4 py-2 border">{{ $l->tanggal_laporan }}</td>
                     <td class="px-4 py-2 border">{{ $l->deskripsi }}</td>
-                    <td class="px-4 py-2 border">{{ $l->path_lampiran }}</td>
+                    <td class="px-4 py-2 border">
+                        @if ($l->path_lampiran)
+                            <a href="{{ asset('storage/' . $l->path_lampiran) }}" target="_blank" class="text-blue-700 underline">Lihat Lampiran</a>
+                            @if (Str::endsWith($l->path_lampiran, ['.jpg', '.jpeg', '.png']))
+                                <img src="{{ asset('storage/' . $l->path_lampiran) }}" class="max-h-20 mt-2" />
+                            @elseif(Str::endsWith($l->path_lampiran, '.pdf'))
+                                <iframe src="{{ asset('storage/' . $l->path_lampiran) }}" class="w-full h-20 mt-2"></iframe>
+                            @endif
+                        @else
+                            <span class="text-gray-400">-</span>
+                        @endif
+                    </td>
                     <td class="px-4 py-2 border">{{ ucfirst($l->status_verifikasi) }}</td>
                     <td class="px-4 py-2 border">{{ $l->catatan_verifikasi }}</td>
                 </tr>

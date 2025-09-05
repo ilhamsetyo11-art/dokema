@@ -18,38 +18,62 @@ class LaporanKegiatanController extends Controller
 
     public function create($magangId)
     {
-        return view('magang.laporan.create', compact('magangId'));
+        $dataMagangList = DataMagang::all();
+        return view('magang.laporan.create', compact('magangId', 'dataMagangList'));
     }
 
     public function store(Request $request, $magangId)
     {
         $data = $request->validate([
+            'data_magang_id' => 'required|exists:data_magang,id',
             'tanggal_laporan' => 'required|date',
             'deskripsi' => 'required',
-            'path_lampiran' => 'nullable',
+            'lampiran' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
         ]);
-        $data['data_magang_id'] = $magangId;
         $data['status_verifikasi'] = 'menunggu';
-        LaporanKegiatan::create($data);
-        return redirect()->route('laporan.index', $magangId)->with('success', 'Laporan berhasil dibuat');
+        if ($request->hasFile('lampiran')) {
+            $lampiranPath = $request->file('lampiran')->store('laporan/lampiran', 'public');
+        } else {
+            $lampiranPath = null;
+        }
+        LaporanKegiatan::create([
+            'data_magang_id' => $data['data_magang_id'],
+            'tanggal_laporan' => $data['tanggal_laporan'],
+            'deskripsi' => $data['deskripsi'],
+            'path_lampiran' => $lampiranPath,
+            'status_verifikasi' => $data['status_verifikasi'],
+        ]);
+        return redirect()->route('laporan.index', [$data['data_magang_id']])->with('success', 'Laporan berhasil dibuat');
     }
 
     public function edit($magangId, $id)
     {
         $laporan = LaporanKegiatan::findOrFail($id);
-        return view('magang.laporan.edit', compact('laporan', 'magangId'));
+        $dataMagangList = DataMagang::all();
+        return view('magang.laporan.edit', compact('laporan', 'magangId', 'dataMagangList'));
     }
 
     public function update(Request $request, $magangId, $id)
     {
         $laporan = LaporanKegiatan::findOrFail($id);
         $data = $request->validate([
+            'data_magang_id' => 'required|exists:data_magang,id',
             'tanggal_laporan' => 'required|date',
             'deskripsi' => 'required',
-            'path_lampiran' => 'nullable',
+            'lampiran' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
         ]);
-        $laporan->update($data);
-        return redirect()->route('laporan.index', $magangId)->with('success', 'Laporan berhasil diupdate');
+        if ($request->hasFile('lampiran')) {
+            $lampiranPath = $request->file('lampiran')->store('laporan/lampiran', 'public');
+        } else {
+            $lampiranPath = $laporan->path_lampiran;
+        }
+        $laporan->update([
+            'data_magang_id' => $data['data_magang_id'],
+            'tanggal_laporan' => $data['tanggal_laporan'],
+            'deskripsi' => $data['deskripsi'],
+            'path_lampiran' => $lampiranPath,
+        ]);
+        return redirect()->route('laporan.index', [$data['data_magang_id']])->with('success', 'Laporan berhasil diupdate');
     }
 
     public function destroy($magangId, $id)
