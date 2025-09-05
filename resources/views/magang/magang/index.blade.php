@@ -14,6 +14,7 @@
             <x-slot name="thead">
                 <tr>
                     <th class="px-4 py-2 border">Surat Permohonan</th>
+                    <th class="px-4 py-2 border">Surat Balasan</th>
                     <th class="px-4 py-2 border">Tanggal Mulai</th>
                     <th class="px-4 py-2 border">Tanggal Selesai</th>
                     <th class="px-4 py-2 border">Status</th>
@@ -22,7 +23,30 @@
             </x-slot>
             @forelse($magang as $m)
                 <tr class="hover:bg-blue-50">
-                    <td class="px-4 py-2 border">{{ $m->path_surat_permohonan }}</td>
+                    <td class="px-4 py-2 border">
+                        @if ($m->path_surat_permohonan)
+                            <a href="{{ asset('storage/' . $m->path_surat_permohonan) }}" target="_blank" class="text-blue-700 underline">Lihat Surat</a>
+                            @if (Str::endsWith($m->path_surat_permohonan, ['.jpg', '.jpeg', '.png']))
+                                <img src="{{ asset('storage/' . $m->path_surat_permohonan) }}" class="max-h-20 mt-2" />
+                            @elseif(Str::endsWith($m->path_surat_permohonan, '.pdf'))
+                                <iframe src="{{ asset('storage/' . $m->path_surat_permohonan) }}" class="w-full h-20 mt-2"></iframe>
+                            @endif
+                        @else
+                            <span class="text-gray-400">-</span>
+                        @endif
+                    </td>
+                    <td class="px-4 py-2 border">
+                        @if ($m->path_surat_balasan)
+                            <a href="{{ asset('storage/' . $m->path_surat_balasan) }}" target="_blank" class="text-blue-700 underline">Lihat Surat</a>
+                            @if (Str::endsWith($m->path_surat_balasan, ['.jpg', '.jpeg', '.png']))
+                                <img src="{{ asset('storage/' . $m->path_surat_balasan) }}" class="max-h-20 mt-2" />
+                            @elseif(Str::endsWith($m->path_surat_balasan, '.pdf'))
+                                <iframe src="{{ asset('storage/' . $m->path_surat_balasan) }}" class="w-full h-20 mt-2"></iframe>
+                            @endif
+                        @else
+                            <span class="text-gray-400">-</span>
+                        @endif
+                    </td>
                     <td class="px-4 py-2 border">{{ $m->tanggal_mulai }}</td>
                     <td class="px-4 py-2 border">{{ $m->tanggal_selesai }}</td>
                     <td class="px-4 py-2 border">{{ ucfirst($m->status) }}</td>
