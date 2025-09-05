@@ -32,5 +32,3 @@
         </table>
     </div>
 </x-admin-layouts>
-
-</html>
