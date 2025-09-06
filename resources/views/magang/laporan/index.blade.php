@@ -2,45 +2,77 @@
     <x-slot name="header">
         Laporan Kegiatan
     </x-slot>
-    <div class="w-full md:w-11/12 xl:w-10/12 mx-auto mt-8 p-4 md:p-8 bg-white rounded shadow-md">
-        <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
-            <h2 class="text-lg font-semibold text-blue-900">Laporan Kegiatan</h2>
-            <a href="{{ route('laporan.create') }}" class="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">Tambah Laporan</a>
+
+    <div class="bg-white rounded-lg shadow">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                <h2 class="text-lg font-medium text-gray-900 mb-2 sm:mb-0">Laporan Kegiatan Magang</h2>
+                <a href="{{ route('laporan.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-sm text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Tambah Laporan
+                </a>
+            </div>
         </div>
-        <x-admin.table>
-            <x-slot name="thead">
-                <tr>
-                    <th class="px-4 py-2 border">Tanggal</th>
-                    <th class="px-4 py-2 border">Deskripsi</th>
-                    <th class="px-4 py-2 border">Lampiran</th>
-                    <th class="px-4 py-2 border">Status</th>
-                    <th class="px-4 py-2 border">Catatan</th>
-                </tr>
-            </x-slot>
-            @forelse($laporan as $l)
-                <tr class="hover:bg-blue-50">
-                    <td class="px-4 py-2 border">{{ $l->tanggal_laporan }}</td>
-                    <td class="px-4 py-2 border">{{ $l->deskripsi }}</td>
-                    <td class="px-4 py-2 border">
-                        @if ($l->path_lampiran)
-                            <a href="{{ asset('storage/' . $l->path_lampiran) }}" target="_blank" class="text-blue-700 underline">Lihat Lampiran</a>
-                            @if (Str::endsWith($l->path_lampiran, ['.jpg', '.jpeg', '.png']))
-                                <img src="{{ asset('storage/' . $l->path_lampiran) }}" class="max-h-20 mt-2" />
-                            @elseif(Str::endsWith($l->path_lampiran, '.pdf'))
-                                <iframe src="{{ asset('storage/' . $l->path_lampiran) }}" class="w-full h-20 mt-2"></iframe>
+
+        <div class="p-6">
+            <x-admin.table id="laporanTable">
+                <x-slot name="thead">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider no-sort">Lampiran</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catatan</th>
+                    </tr>
+                </x-slot>
+                @forelse($laporan as $l)
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ \Carbon\Carbon::parse($l->tanggal_laporan)->format('d M Y') }}
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                            <div class="max-w-xs truncate" title="{{ $l->deskripsi }}">
+                                {{ $l->deskripsi }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                                @if ($l->status_verifikasi === 'disetujui') bg-green-100 text-green-800
+                                @elseif($l->status_verifikasi === 'menunggu') bg-yellow-100 text-yellow-800
+                                @elseif($l->status_verifikasi === 'revisi') bg-red-100 text-red-800
+                                @else bg-gray-100 text-gray-800 @endif">
+                                {{ ucfirst($l->status_verifikasi) }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            @if ($l->path_lampiran)
+                                <a href="{{ asset('storage/' . $l->path_lampiran) }}" target="_blank" class="text-blue-600 hover:text-blue-900 flex items-center" title="Lihat Lampiran">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.586-6.586a4 4 0 00-5.656-5.656l-6.586 6.586a6 6 0 008.486 8.486L20.5 13" />
+                                    </svg>
+                                </a>
+                            @else
+                                <span class="text-gray-400">-</span>
                             @endif
-                        @else
-                            <span class="text-gray-400">-</span>
-                        @endif
-                    </td>
-                    <td class="px-4 py-2 border">{{ ucfirst($l->status_verifikasi) }}</td>
-                    <td class="px-4 py-2 border">{{ $l->catatan_verifikasi }}</td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="5" class="p-2 border text-center text-gray-500">Belum ada laporan</td>
-                </tr>
-            @endforelse
-        </x-admin.table>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-500">
+                            @if ($l->catatan_verifikasi)
+                                <div class="max-w-xs truncate" title="{{ $l->catatan_verifikasi }}">
+                                    {{ $l->catatan_verifikasi }}
+                                </div>
+                            @else
+                                <span class="text-gray-400">-</span>
+                            @endif
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">Belum ada laporan kegiatan.</td>
+                    </tr>
+                @endforelse
+            </x-admin.table>
+        </div>
     </div>
 </x-admin-layouts>

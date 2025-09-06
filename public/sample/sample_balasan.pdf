@@ -1,0 +1,106 @@
+%PDF-1.4
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
+>>
+endobj
+
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Contents 4 0 R
+/Resources <<
+/Font <<
+/F1 5 0 R
+/F2 6 0 R
+>>
+>>
+>>
+endobj
+
+4 0 obj
+<<
+/Length 380
+>>
+stream
+BT
+/F1 16 Tf
+200 720 Td
+(SURAT BALASAN PERMOHONAN MAGANG) Tj
+0 -50 Td
+/F2 12 Tf
+50 0 Td
+(Kepada Yth.) Tj
+0 -20 Td
+(Sdr/i [Nama Pelamar]) Tj
+0 -20 Td
+(Di tempat) Tj
+0 -30 Td
+(Dengan hormat,) Tj
+0 -30 Td
+(Menindaklanjuti surat permohonan magang yang telah) Tj
+0 -20 Td
+(diajukan, dengan ini kami sampaikan bahwa:) Tj
+0 -30 Td
+/F1 14 Tf
+(PERMOHONAN MAGANG ANDA DITERIMA) Tj
+0 -30 Td
+/F2 12 Tf
+(Dengan ketentuan sebagai berikut:) Tj
+0 -20 Td
+(- Periode: [Tanggal Mulai] - [Tanggal Selesai]) Tj
+0 -20 Td
+(- Departemen: [Nama Departemen]) Tj
+0 -20 Td
+(- Pembimbing: [Nama Pembimbing]) Tj
+0 -40 Td
+/F2 10 Tf
+(Dokumen ini adalah sample untuk keperluan demo sistem DOKEMA) Tj
+ET
+endstream
+endobj
+
+5 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica-Bold
+>>
+endobj
+
+6 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
+
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000284 00000 n 
+0000000716 00000 n 
+0000000784 00000 n 
+trailer
+<<
+/Size 7
+/Root 1 0 R
+>>
+startxref
+845
+%%EOF

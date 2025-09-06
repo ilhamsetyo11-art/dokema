@@ -2,48 +2,67 @@
     <x-slot name="header">
         Manajemen User
     </x-slot>
-    <div class="w-full md:w-11/12 xl:w-10/12 mx-auto mt-8 p-4 md:p-8 bg-white rounded shadow-md">
-        @if (session('success'))
-            <div class="mb-4 p-2 bg-green-100 text-green-700 rounded">{{ session('success') }}</div>
-        @endif
-        <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
-            <h2 class="text-lg font-semibold text-blue-900">Daftar User</h2>
-            <a href="{{ route('user.create') }}" class="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">Tambah User</a>
+
+    <div class="bg-white rounded-lg shadow">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                <h2 class="text-lg font-medium text-gray-900 mb-2 sm:mb-0">Daftar User</h2>
+                <a href="{{ route('user.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-sm text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Tambah User
+                </a>
+            </div>
         </div>
-        <x-admin.table>
-            <x-slot name="thead">
-                <tr>
-                    <th class="px-4 py-2 border">Nama</th>
-                    <th class="px-4 py-2 border">Email</th>
-                    <th class="px-4 py-2 border">Role</th>
-                    <th class="px-4 py-2 border">Aksi</th>
-                </tr>
-            </x-slot>
-            @forelse ($users as $user)
-                <tr class="hover:bg-blue-50">
-                    <td class="px-4 py-2 border">{{ $user->name }}</td>
-                    <td class="px-4 py-2 border">{{ $user->email }}</td>
-                    <td class="px-4 py-2 border">{{ $user->role }}</td>
-                    <td class="px-4 py-2 border">
-                        <div class="flex items-center justify-end space-x-2">
-                            <a href="{{ route('user.edit', $user) }}" class="text-blue-900 hover:text-blue-800 hover:bg-blue-50 flex items-center justify-center p-2 border border-blue-200 rounded-sm" title="Edit">
-                                <x-lucide-pencil class="w-5 h-5" />
-                            </a>
-                            <form action="{{ route('user.destroy', $user) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus user ini?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-blue-900 hover:text-blue-800 hover:bg-blue-50 cursor-pointer flex items-center justify-center p-2 border border-blue-200 rounded-sm" title="Hapus">
-                                    <x-lucide-trash-2 class="w-5 h-5" />
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="4" class="px-6 py-4 text-center text-gray-500">Belum ada data user.</td>
-                </tr>
-            @endforelse
-        </x-admin.table>
+
+        <div class="p-6">
+            <x-admin.table id="usersTable">
+                <x-slot name="thead">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider no-sort">Aksi</th>
+                    </tr>
+                </x-slot>
+                @forelse ($users as $user)
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $user->name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $user->email }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                                @if ($user->role === 'hr') bg-blue-100 text-blue-800
+                                @elseif($user->role === 'pembimbing') bg-green-100 text-green-800
+                                @else bg-gray-100 text-gray-800 @endif">
+                                {{ ucfirst($user->role) }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div class="flex items-center justify-end space-x-3">
+                                <a href="{{ route('user.edit', $user) }}" class="text-blue-600 hover:text-blue-900 transition-colors duration-200" title="Edit User">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                </a>
+                                <form action="{{ route('user.destroy', $user) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus user ini?')" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-900 transition-colors duration-200" title="Hapus User">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">Belum ada data user.</td>
+                    </tr>
+                @endforelse
+            </x-admin.table>
+        </div>
     </div>
 </x-admin-layouts>
