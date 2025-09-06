@@ -1,7 +1,9 @@
-@extends('components.admin.layouts')
+<x-admin-layouts>
+    <x-slot name="header">
+        Tambah Laporan Kegiatan
+    </x-slot>
 
-@section('content')
-    <div class="max-w-4xl mx-auto p-6">
+    <div class="max-w-4xl mx-auto">
         @include('magang.laporan.form', [
             'laporan' => null,
             'action' => route('laporan.store'),
@@ -9,4 +11,4 @@
             'magangs' => $dataMagangList,
         ])
     </div>
-@endsection
+</x-admin-layouts>

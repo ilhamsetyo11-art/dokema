@@ -4,6 +4,11 @@
     </x-slot>
 
     <div class="max-w-4xl mx-auto">
-        <x-magang.profil.form :action="route('profil.store')" method="POST" :users="$users" />
+        @include('magang.profil.form', [
+            'profil' => null,
+            'action' => route('profil.store'),
+            'method' => 'POST',
+            'users' => $users,
+        ])
     </div>
 </x-admin-layouts>

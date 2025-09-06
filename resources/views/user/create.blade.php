@@ -4,6 +4,10 @@
     </x-slot>
 
     <div class="max-w-4xl mx-auto">
-        <x-user.form :action="route('user.store')" method="POST" />
+        @include('user.form', [
+            'user' => null,
+            'action' => route('user.store'),
+            'method' => 'POST',
+        ])
     </div>
 </x-admin-layouts>

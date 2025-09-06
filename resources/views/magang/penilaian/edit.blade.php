@@ -1,7 +1,9 @@
-@extends('components.admin.layouts')
+<x-admin-layouts>
+    <x-slot name="header">
+        Edit Penilaian Akhir
+    </x-slot>
 
-@section('content')
-    <div class="max-w-4xl mx-auto p-6">
+    <div class="max-w-4xl mx-auto">
         @include('magang.penilaian.form', [
             'penilaian' => $penilaian,
             'action' => route('penilaian.update', [$magangId, $penilaian->id]),
@@ -9,4 +11,4 @@
             'magangs' => $datamagangs ?? [],
         ])
     </div>
-@endsection
+</x-admin-layouts>

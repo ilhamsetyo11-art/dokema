@@ -4,6 +4,10 @@
     </x-slot>
 
     <div class="max-w-4xl mx-auto">
-        <x-user.form :user="$user" :action="route('user.update', $user)" method="PUT" />
+        @include('user.form', [
+            'user' => $user,
+            'action' => route('user.update', $user),
+            'method' => 'PUT',
+        ])
     </div>
 </x-admin-layouts>

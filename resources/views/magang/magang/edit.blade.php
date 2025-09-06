@@ -1,7 +1,9 @@
-@extends('components.admin.layouts')
+<x-admin-layouts>
+    <x-slot name="header">
+        Edit Data Magang
+    </x-slot>
 
-@section('content')
-    <div class="max-w-4xl mx-auto p-6">
+    <div class="max-w-4xl mx-auto">
         @include('magang.magang.form', [
             'magang' => $magang,
             'action' => route('magang.update', $magang->id),
@@ -9,4 +11,4 @@
             'profils' => $pesertas,
         ])
     </div>
-@endsection
+</x-admin-layouts>
