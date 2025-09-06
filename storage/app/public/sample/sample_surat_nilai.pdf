@@ -31,36 +31,34 @@ endobj
 
 4 0 obj
 <<
-/Length 320
+/Length 350
 >>
 stream
 BT
-/F1 16 Tf
+/F1 18 Tf
 200 720 Td
-(SURAT PERMOHONAN MAGANG) Tj
+(SURAT PENILAIAN AKHIR MAGANG) Tj
 0 -50 Td
 /F2 12 Tf
 50 0 Td
-(Kepada Yth.) Tj
-0 -20 Td
-(HRD [Nama Perusahaan]) Tj
+(Dengan ini menyatakan bahwa:) Tj
 0 -30 Td
-(Dengan hormat,) Tj
-0 -30 Td
-(Saya yang bertanda tangan di bawah ini:) Tj
+(Nama Peserta: [Nama Lengkap]) Tj
 0 -20 Td
-(Nama: [Nama Lengkap]) Tj
+(Departemen: [Nama Departemen]) Tj
 0 -20 Td
-(NIM: [Nomor Induk Mahasiswa]) Tj
-0 -20 Td
-(Universitas: [Nama Universitas]) Tj
-0 -30 Td
-(Dengan ini mengajukan permohonan untuk melaksanakan) Tj
-0 -20 Td
-(kegiatan magang di perusahaan yang Bapak/Ibu pimpin.) Tj
+(Periode Magang: [Tanggal Mulai] - [Tanggal Selesai]) Tj
 0 -40 Td
+(Telah menyelesaikan program magang dengan nilai:) Tj
+0 -30 Td
+/F1 14 Tf
+150 0 Td
+([NILAI AKHIR]) Tj
+-150 -40 Td
 /F2 10 Tf
 (Dokumen ini adalah sample untuk keperluan demo sistem DOKEMA) Tj
+0 -20 Td
+(File ini akan digantikan dengan surat nilai asli) Tj
 ET
 endstream
 endobj
@@ -88,13 +86,13 @@ xref
 0000000058 00000 n 
 0000000115 00000 n 
 0000000284 00000 n 
-0000000656 00000 n 
-0000000724 00000 n 
+0000000686 00000 n 
+0000000754 00000 n 
 trailer
 <<
 /Size 7
 /Root 1 0 R
 >>
 startxref
-785
+815
 %%EOF

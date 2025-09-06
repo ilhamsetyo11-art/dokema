@@ -77,7 +77,7 @@ class LaporanKegiatanSeeder extends Seeder
                     'tanggal_laporan' => $tanggalLaporan->format('Y-m-d'),
                     'deskripsi' => $kegiatanTemplates[array_rand($kegiatanTemplates)] .
                         '. Aktivitas ini memberikan pengalaman berharga dalam memahami proses bisnis perusahaan dan meningkatkan kemampuan teknis.',
-                    'path_lampiran' => rand(1, 100) <= 70 ? 'documents/lampiran_laporan_' . uniqid() . '.pdf' : null,
+                    'path_lampiran' => rand(1, 100) <= 70 ? 'sample/sample_lampiran.pdf' : null,
                     'status_verifikasi' => $status,
                     'catatan_verifikasi' => $status !== 'menunggu' ? $catatanVerifikasi[array_rand($catatanVerifikasi)] : null,
                     'waktu_verifikasi' => $status !== 'menunggu' ? $tanggalLaporan->addDays(rand(1, 3)) : null,

@@ -48,7 +48,7 @@ class PenilaianAkhirSeeder extends Seeder
                     'data_magang_id' => $dataMagang->id,
                     'nilai' => $nilai,
                     'umpan_balik' => $umpanBalikTemplates[array_rand($umpanBalikTemplates)],
-                    'path_surat_nilai' => rand(1, 100) <= 80 ? 'documents/surat_nilai_' . $dataMagang->id . '.pdf' : null,
+                    'path_surat_nilai' => rand(1, 100) <= 80 ? 'sample/sample_surat_nilai.pdf' : null,
                 ]);
             }
         }

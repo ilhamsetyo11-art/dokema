@@ -38,8 +38,8 @@ class DataMagangSeeder extends Seeder
             DataMagang::create([
                 'profil_peserta_id' => $profil->id,
                 'pembimbing_id' => $pembimbings->random()->id,
-                'path_surat_permohonan' => 'documents/surat_permohonan_' . ($index + 1) . '.pdf',
-                'path_surat_balasan' => $status === 'diterima' ? 'documents/surat_balasan_' . ($index + 1) . '.pdf' : null,
+                'path_surat_permohonan' => 'sample/sample_permohonan.pdf',
+                'path_surat_balasan' => $status === 'diterima' ? 'sample/sample_balasan.pdf' : null,
                 'tanggal_mulai' => $tanggalMulai->format('Y-m-d'),
                 'tanggal_selesai' => $tanggalSelesai->format('Y-m-d'),
                 'status' => $status,
@@ -54,8 +54,8 @@ class DataMagangSeeder extends Seeder
             DataMagang::create([
                 'profil_peserta_id' => $profilPesertas->random()->id,
                 'pembimbing_id' => $pembimbings->random()->id,
-                'path_surat_permohonan' => 'documents/surat_permohonan_future_' . ($i + 1) . '.pdf',
-                'path_surat_balasan' => 'documents/surat_balasan_future_' . ($i + 1) . '.pdf',
+                'path_surat_permohonan' => 'sample/sample_permohonan.pdf',
+                'path_surat_balasan' => 'sample/sample_balasan.pdf',
                 'tanggal_mulai' => $tanggalMulai->format('Y-m-d'),
                 'tanggal_selesai' => $tanggalSelesai->format('Y-m-d'),
                 'status' => 'diterima',
