@@ -53,7 +53,7 @@ Route::put('/magang/{magangId}/bimbingan/{id}', [LogBimbinganController::class, 
 Route::delete('/magang/{magangId}/bimbingan/{id}', [LogBimbinganController::class, 'destroy'])->name('bimbingan.destroy');
 
 // Penilaian Akhir
-Route::get('/magang/{magangId}/penilaian', [PenilaianAkhirController::class, 'index'])->name('penilaian.index');
+Route::get('/penilaian', [PenilaianAkhirController::class, 'index'])->name('penilaian.index');
 Route::get('/magang/{magangId}/penilaian/create', [PenilaianAkhirController::class, 'create'])->name('penilaian.create');
 Route::post('/magang/{magangId}/penilaian', [PenilaianAkhirController::class, 'store'])->name('penilaian.store');
 Route::get('/magang/{magangId}/penilaian/{id}/edit', [PenilaianAkhirController::class, 'edit'])->name('penilaian.edit');
