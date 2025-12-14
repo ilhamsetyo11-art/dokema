@@ -82,4 +82,55 @@ class LaporanKegiatanController extends Controller
         $laporan->delete();
         return redirect()->route('laporan.index')->with('success', 'Laporan berhasil dihapus');
     }
+
+    public function approve($id)
+    {
+        $laporan = LaporanKegiatan::findOrFail($id);
+
+        // Only pembimbing can approve
+        if (auth()->user()->role !== 'pembimbing') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk menyetujui laporan');
+        }
+
+        // Check if pembimbing is assigned to this intern
+        if ($laporan->dataMagang->pembimbing_id !== auth()->id()) {
+            return redirect()->back()->with('error', 'Anda bukan pembimbing untuk magang ini');
+        }
+
+        $laporan->update([
+            'status_verifikasi' => 'verified',
+            'verified_by' => auth()->id(),
+            'verified_at' => now(),
+        ]);
+
+        return redirect()->back()->with('success', 'Laporan berhasil disetujui');
+    }
+
+    public function reject(Request $request, $id)
+    {
+        $laporan = LaporanKegiatan::findOrFail($id);
+
+        // Only pembimbing can reject
+        if (auth()->user()->role !== 'pembimbing') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk menolak laporan');
+        }
+
+        // Check if pembimbing is assigned to this intern
+        if ($laporan->dataMagang->pembimbing_id !== auth()->id()) {
+            return redirect()->back()->with('error', 'Anda bukan pembimbing untuk magang ini');
+        }
+
+        $request->validate([
+            'catatan_verifikasi' => 'required|string|min:10',
+        ]);
+
+        $laporan->update([
+            'status_verifikasi' => 'rejected',
+            'verified_by' => auth()->id(),
+            'verified_at' => now(),
+            'catatan_verifikasi' => $request->catatan_verifikasi,
+        ]);
+
+        return redirect()->back()->with('success', 'Laporan ditolak dengan catatan');
+    }
 }

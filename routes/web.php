@@ -10,57 +10,80 @@ use App\Http\Controllers\Magang\PenilaianAkhirController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Magang\WorkflowMagangController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Admin\SettingsController;
 
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+// Authentication Routes
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
 
-// Workflow Management (untuk HR)
-Route::get('/workflow/approval', [WorkflowMagangController::class, 'index'])->name('workflow.approval');
-Route::post('/workflow/process/{magangId}', [WorkflowMagangController::class, 'processApplication'])->name('workflow.process');
-// User Management
-Route::get('/user', [UserController::class, 'index'])->name('user.index');
-Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
-Route::post('/user', [UserController::class, 'store'])->name('user.store');
-Route::get('/user/{user}/edit', [UserController::class, 'edit'])->name('user.edit');
-Route::put('/user/{user}', [UserController::class, 'update'])->name('user.update');
-Route::delete('/user/{user}', [UserController::class, 'destroy'])->name('user.destroy');
+// Protected Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
-// Profil Peserta
-Route::get('/profil', [ProfilPesertaController::class, 'index'])->name('profil.index');
-Route::get('/profil/create', [ProfilPesertaController::class, 'create'])->name('profil.create');
-Route::post('/profil', [ProfilPesertaController::class, 'store'])->name('profil.store');
-Route::get('/profil/{id}/edit', [ProfilPesertaController::class, 'edit'])->name('profil.edit');
-Route::put('/profil/{id}', [ProfilPesertaController::class, 'update'])->name('profil.update');
-Route::delete('/profil/{id}', [ProfilPesertaController::class, 'destroy'])->name('profil.destroy');
+    // Workflow Management (untuk HR)
+    Route::get('/workflow/approval', [WorkflowMagangController::class, 'index'])->name('workflow.approval');
+    Route::post('/workflow/process/{magangId}', [WorkflowMagangController::class, 'processApplication'])->name('workflow.process');
 
-// Data Magang
-Route::get('/magang', [DataMagangController::class, 'index'])->name('magang.index');
-Route::get('/magang/create', [DataMagangController::class, 'create'])->name('magang.create');
-Route::post('/magang', [DataMagangController::class, 'store'])->name('magang.store');
-Route::get('/magang/{id}/edit', [DataMagangController::class, 'edit'])->name('magang.edit');
-Route::put('/magang/{id}', [DataMagangController::class, 'update'])->name('magang.update');
-Route::delete('/magang/{id}', [DataMagangController::class, 'destroy'])->name('magang.destroy');
+    // Settings Management (untuk HR)
+    Route::middleware(['role:hr'])->group(function () {
+        Route::get('/admin/settings', [SettingsController::class, 'index'])->name('settings.index');
+        Route::post('/admin/settings', [SettingsController::class, 'update'])->name('settings.update');
+    });
 
-// Laporan Kegiatan
-Route::get('/magang/laporan', [LaporanKegiatanController::class, 'index'])->name('laporan.index');
-Route::get('/magang/laporan/create', [LaporanKegiatanController::class, 'create'])->name('laporan.create');
-Route::post('/magang/laporan', [LaporanKegiatanController::class, 'store'])->name('laporan.store');
-Route::get('/magang/laporan/{id}/edit', [LaporanKegiatanController::class, 'edit'])->name('laporan.edit');
-Route::put('/magang/laporan/{id}', [LaporanKegiatanController::class, 'update'])->name('laporan.update');
-Route::delete('/magang/laporan/{id}', [LaporanKegiatanController::class, 'destroy'])->name('laporan.destroy');
+    // User Management
+    Route::get('/user', [UserController::class, 'index'])->name('user.index');
+    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/user', [UserController::class, 'store'])->name('user.store');
+    Route::get('/user/{user}/edit', [UserController::class, 'edit'])->name('user.edit');
+    Route::put('/user/{user}', [UserController::class, 'update'])->name('user.update');
+    Route::delete('/user/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 
-// Log Bimbingan
-Route::get('/magang/{magangId}/bimbingan', [LogBimbinganController::class, 'index'])->name('bimbingan.index');
-Route::get('/magang/{magangId}/bimbingan/create', [LogBimbinganController::class, 'create'])->name('bimbingan.create');
-Route::post('/magang/{magangId}/bimbingan', [LogBimbinganController::class, 'store'])->name('bimbingan.store');
-Route::get('/magang/{magangId}/bimbingan/{id}/edit', [LogBimbinganController::class, 'edit'])->name('bimbingan.edit');
-Route::put('/magang/{magangId}/bimbingan/{id}', [LogBimbinganController::class, 'update'])->name('bimbingan.update');
-Route::delete('/magang/{magangId}/bimbingan/{id}', [LogBimbinganController::class, 'destroy'])->name('bimbingan.destroy');
+    // Profil Peserta
+    Route::get('/profil', [ProfilPesertaController::class, 'index'])->name('profil.index');
+    Route::get('/profil/create', [ProfilPesertaController::class, 'create'])->name('profil.create');
+    Route::post('/profil', [ProfilPesertaController::class, 'store'])->name('profil.store');
+    Route::get('/profil/{id}/edit', [ProfilPesertaController::class, 'edit'])->name('profil.edit');
+    Route::put('/profil/{id}', [ProfilPesertaController::class, 'update'])->name('profil.update');
+    Route::delete('/profil/{id}', [ProfilPesertaController::class, 'destroy'])->name('profil.destroy');
 
-// Penilaian Akhir
-Route::get('/penilaian', [PenilaianAkhirController::class, 'index'])->name('penilaian.index');
-Route::get('/magang/{magangId}/penilaian/create', [PenilaianAkhirController::class, 'create'])->name('penilaian.create');
-Route::post('/magang/{magangId}/penilaian', [PenilaianAkhirController::class, 'store'])->name('penilaian.store');
-Route::get('/magang/{magangId}/penilaian/{id}/edit', [PenilaianAkhirController::class, 'edit'])->name('penilaian.edit');
-Route::put('/magang/{magangId}/penilaian/{id}', [PenilaianAkhirController::class, 'update'])->name('penilaian.update');
-Route::delete('/magang/{magangId}/penilaian/{id}', [PenilaianAkhirController::class, 'destroy'])->name('penilaian.destroy');
+    // Data Magang
+    Route::get('/magang', [DataMagangController::class, 'index'])->name('magang.index');
+    Route::get('/magang/create', [DataMagangController::class, 'create'])->name('magang.create');
+    Route::post('/magang', [DataMagangController::class, 'store'])->name('magang.store');
+    Route::get('/magang/{id}/edit', [DataMagangController::class, 'edit'])->name('magang.edit');
+    Route::put('/magang/{id}', [DataMagangController::class, 'update'])->name('magang.update');
+    Route::delete('/magang/{id}', [DataMagangController::class, 'destroy'])->name('magang.destroy');
+
+    // Laporan Kegiatan
+    Route::get('/magang/laporan', [LaporanKegiatanController::class, 'index'])->name('laporan.index');
+    Route::get('/magang/laporan/create', [LaporanKegiatanController::class, 'create'])->name('laporan.create');
+    Route::post('/magang/laporan', [LaporanKegiatanController::class, 'store'])->name('laporan.store');
+    Route::get('/magang/laporan/{id}/edit', [LaporanKegiatanController::class, 'edit'])->name('laporan.edit');
+    Route::put('/magang/laporan/{id}', [LaporanKegiatanController::class, 'update'])->name('laporan.update');
+    Route::delete('/magang/laporan/{id}', [LaporanKegiatanController::class, 'destroy'])->name('laporan.destroy');
+
+    // Report Approval Routes (Issue #6)
+    Route::post('/laporan/{id}/approve', [LaporanKegiatanController::class, 'approve'])->name('laporan.approve');
+    Route::post('/laporan/{id}/reject', [LaporanKegiatanController::class, 'reject'])->name('laporan.reject');
+
+    // Log Bimbingan
+    Route::get('/magang/{magangId}/bimbingan', [LogBimbinganController::class, 'index'])->name('bimbingan.index');
+    Route::get('/magang/{magangId}/bimbingan/create', [LogBimbinganController::class, 'create'])->name('bimbingan.create');
+    Route::post('/magang/{magangId}/bimbingan', [LogBimbinganController::class, 'store'])->name('bimbingan.store');
+    Route::get('/magang/{magangId}/bimbingan/{id}/edit', [LogBimbinganController::class, 'edit'])->name('bimbingan.edit');
+    Route::put('/magang/{magangId}/bimbingan/{id}', [LogBimbinganController::class, 'update'])->name('bimbingan.update');
+    Route::delete('/magang/{magangId}/bimbingan/{id}', [LogBimbinganController::class, 'destroy'])->name('bimbingan.destroy');
+
+    // Penilaian Akhir
+    Route::get('/penilaian', [PenilaianAkhirController::class, 'index'])->name('penilaian.index');
+    Route::get('/magang/{magangId}/penilaian/create', [PenilaianAkhirController::class, 'create'])->name('penilaian.create');
+    Route::post('/magang/{magangId}/penilaian', [PenilaianAkhirController::class, 'store'])->name('penilaian.store');
+    Route::get('/magang/{magangId}/penilaian/{id}/edit', [PenilaianAkhirController::class, 'edit'])->name('penilaian.edit');
+    Route::put('/magang/{magangId}/penilaian/{id}', [PenilaianAkhirController::class, 'update'])->name('penilaian.update');
+    Route::delete('/magang/{magangId}/penilaian/{id}', [PenilaianAkhirController::class, 'destroy'])->name('penilaian.destroy');
+});

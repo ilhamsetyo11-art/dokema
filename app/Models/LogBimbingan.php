@@ -18,6 +18,10 @@ class LogBimbingan extends Model
         'catatan_pembimbing',
     ];
 
+    protected $casts = [
+        'waktu_bimbingan' => 'datetime',
+    ];
+
     public function dataMagang()
     {
         return $this->belongsTo(DataMagang::class);

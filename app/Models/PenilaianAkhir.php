@@ -13,9 +13,18 @@ class PenilaianAkhir extends Model
 
     protected $fillable = [
         'data_magang_id',
-        'nilai',
+        'nilai_kehadiran',
+        'nilai_kedisiplinan',
+        'nilai_keterampilan',
+        'nilai_sikap',
+        'nilai_rata_rata',
         'umpan_balik',
         'path_surat_nilai',
+        'tanggal_penilaian',
+    ];
+
+    protected $casts = [
+        'tanggal_penilaian' => 'datetime',
     ];
 
     public function dataMagang()

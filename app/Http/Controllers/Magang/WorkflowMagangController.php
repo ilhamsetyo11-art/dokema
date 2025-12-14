@@ -17,19 +17,19 @@ class WorkflowMagangController extends Controller
      */
     public function index()
     {
-        // Get pending applications
-        $pendingApplications = DataMagang::with(['profilPeserta.user'])
-            ->where('status', 'menunggu')
+        // Get pending applications with real-time eager loading (Issue #5)
+        $pendingApplications = DataMagang::with(['profilPeserta.user', 'pembimbing'])
+            ->whereIn('workflow_status', ['submitted', 'under_review'])
             ->latest()
             ->get();
 
-        // Get quota information
+        // Get quota information from Settings (Issue #4)
         $quota = $this->checkQuota();
 
         // Get supervisors with current workload
         $supervisors = User::where('role', 'pembimbing')
             ->withCount(['magangDibimbing' => function ($query) {
-                $query->where('status', 'diterima');
+                $query->whereIn('workflow_status', ['approved', 'in_progress']);
             }])
             ->orderBy('magang_dibimbing_count', 'asc')
             ->get();
@@ -39,6 +39,7 @@ class WorkflowMagangController extends Controller
 
     /**
      * Handle approval/rejection workflow
+     * Issue #3: Auto-create user account on approval
      */
     public function processApplication(Request $request, $magangId)
     {
@@ -52,45 +53,76 @@ class WorkflowMagangController extends Controller
         ]);
 
         if ($request->action === 'approve') {
+            // Check quota before approval
+            $quota = $this->checkQuota();
+            if ($quota['is_full']) {
+                return redirect()->back()->with('error', 'Kuota magang sudah penuh. Tidak dapat menyetujui permohonan baru.');
+            }
+
             // Approve the application
             $suratBalasanPath = $request->file('surat_balasan')->store('surat_balasan', 'public');
 
+            // Issue #3: Auto-create user account when approved
+            $user = null;
+            if (!$magang->profilPeserta->user_id) {
+                $randomPassword = \Illuminate\Support\Str::random(12);
+
+                $user = User::create([
+                    'name' => $magang->profilPeserta->nama,
+                    'email' => $magang->profilPeserta->email,
+                    'password' => \Illuminate\Support\Facades\Hash::make($randomPassword),
+                    'role' => 'magang',
+                ]);
+
+                // Link user to profil
+                $magang->profilPeserta->update(['user_id' => $user->id]);
+
+                // TODO: Send email with credentials
+                // Mail::to($user->email)->send(new AccountCreated($user, $randomPassword));
+            }
+
             $magang->update([
                 'status' => 'diterima',
+                'workflow_status' => 'approved',
                 'pembimbing_id' => $request->pembimbing_id,
                 'path_surat_balasan' => $suratBalasanPath,
                 'tanggal_persetujuan' => now()
             ]);
 
-            // Send notification to student
-            // Mail::to($magang->profilPeserta->user->email)->send(new MagangApproved($magang));
+            $message = 'Permohonan magang telah disetujui dan pembimbing telah ditugaskan.';
+            if ($user) {
+                $message .= ' Akun pengguna telah dibuat otomatis.';
+            }
 
-            return redirect()->back()->with('success', 'Permohonan magang telah disetujui dan pembimbing telah ditugaskan.');
+            // Send notification to student
+            // Mail::to($magang->profilPeserta->email)->send(new MagangApproved($magang));
+
+            return redirect()->back()->with('success', $message);
         } else {
             // Reject the application  
             $magang->update([
                 'status' => 'ditolak',
-                'alasan_penolakan' => $request->rejection_reason,
+                'workflow_status' => 'rejected',
+                'catatan_penolakan' => $request->rejection_reason,
                 'tanggal_penolakan' => now()
             ]);
 
             // Send notification to student
-            // Mail::to($magang->profilPeserta->user->email)->send(new MagangRejected($magang));
+            // Mail::to($magang->profilPeserta->email)->send(new MagangRejected($magang));
 
             return redirect()->back()->with('success', 'Permohonan magang telah ditolak.');
         }
     }
 
     /**
-     * Check quota for internship
+     * Check quota for internship (Issue #4: Use Settings model)
      */
     public function checkQuota()
     {
-        $activeInterns = DataMagang::where('status', 'diterima')
-            ->whereBetween('tanggal_mulai', [now()->startOfMonth(), now()->endOfMonth()])
+        $activeInterns = DataMagang::whereIn('workflow_status', ['approved', 'in_progress'])
             ->count();
 
-        $maxQuota = config('magang.max_quota', 20); // Set in config
+        $maxQuota = \App\Models\Setting::get('magang_quota', 20);
 
         return [
             'current' => $activeInterns,

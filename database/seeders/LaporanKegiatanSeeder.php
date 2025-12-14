@@ -78,9 +78,10 @@ class LaporanKegiatanSeeder extends Seeder
                     'deskripsi' => $kegiatanTemplates[array_rand($kegiatanTemplates)] .
                         '. Aktivitas ini memberikan pengalaman berharga dalam memahami proses bisnis perusahaan dan meningkatkan kemampuan teknis.',
                     'path_lampiran' => rand(1, 100) <= 70 ? 'sample/sample_lampiran.pdf' : null,
-                    'status_verifikasi' => $status,
+                    'status_verifikasi' => $status === 'disetujui' ? 'verified' : ($status === 'revisi' ? 'rejected' : 'pending'),
                     'catatan_verifikasi' => $status !== 'menunggu' ? $catatanVerifikasi[array_rand($catatanVerifikasi)] : null,
-                    'waktu_verifikasi' => $status !== 'menunggu' ? $tanggalLaporan->addDays(rand(1, 3)) : null,
+                    'verified_at' => $status !== 'menunggu' ? $tanggalLaporan->copy()->addDays(rand(1, 3)) : null,
+                    'verified_by' => $status !== 'menunggu' ? $dataMagang->pembimbing_id : null,
                 ]);
             }
         }

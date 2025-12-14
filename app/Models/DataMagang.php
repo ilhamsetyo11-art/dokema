@@ -19,7 +19,30 @@ class DataMagang extends Model
         'tanggal_mulai',
         'tanggal_selesai',
         'status',
+        'workflow_status',
+        'tanggal_persetujuan',
+        'tanggal_penolakan',
+        'catatan_penolakan',
     ];
+
+    protected $casts = [
+        'tanggal_mulai' => 'date',
+        'tanggal_selesai' => 'date',
+        'tanggal_persetujuan' => 'date',
+        'tanggal_penolakan' => 'date',
+    ];
+
+    /**
+     * Boot method to automatically log workflow transitions
+     */
+    protected static function booted()
+    {
+        static::updating(function ($magang) {
+            if ($magang->isDirty('workflow_status')) {
+                WorkflowTransition::log($magang);
+            }
+        });
+    }
 
     public function profilPeserta()
     {
@@ -44,5 +67,10 @@ class DataMagang extends Model
     public function penilaianAkhir()
     {
         return $this->hasOne(PenilaianAkhir::class);
+    }
+
+    public function workflowTransitions()
+    {
+        return $this->hasMany(WorkflowTransition::class);
     }
 }

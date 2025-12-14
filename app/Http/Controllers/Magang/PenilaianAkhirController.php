@@ -27,13 +27,51 @@ class PenilaianAkhirController extends Controller
 
     public function store(Request $request, $magangId)
     {
+        $dataMagang = DataMagang::findOrFail($magangId);
+
+        // Check if penilaian already exists
+        if ($dataMagang->penilaianAkhir) {
+            return redirect()->back()->with('error', 'Penilaian akhir sudah ada untuk magang ini');
+        }
+
+        // Only pembimbing can create penilaian
+        if (auth()->user()->role !== 'pembimbing' || $dataMagang->pembimbing_id !== auth()->id()) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk menilai magang ini');
+        }
+
         $data = $request->validate([
-            'nilai' => 'required|numeric|min:0|max:4',
-            'umpan_balik' => 'nullable|string',
-            'path_surat_nilai' => 'nullable|string',
+            'nilai_kehadiran' => 'required|numeric|min:0|max:100',
+            'nilai_kedisiplinan' => 'required|numeric|min:0|max:100',
+            'nilai_keterampilan' => 'required|numeric|min:0|max:100',
+            'nilai_sikap' => 'required|numeric|min:0|max:100',
+            'umpan_balik' => 'required|string|min:20',
+            'surat_nilai' => 'nullable|file|mimes:pdf',
         ]);
-        $data['data_magang_id'] = $magangId;
-        PenilaianAkhir::create($data);
+
+        // Calculate average score
+        $nilaiRataRata = ($data['nilai_kehadiran'] + $data['nilai_kedisiplinan'] +
+            $data['nilai_keterampilan'] + $data['nilai_sikap']) / 4;
+
+        $suratNilaiPath = null;
+        if ($request->hasFile('surat_nilai')) {
+            $suratNilaiPath = $request->file('surat_nilai')->store('surat_nilai', 'public');
+        }
+
+        PenilaianAkhir::create([
+            'data_magang_id' => $magangId,
+            'nilai_kehadiran' => $data['nilai_kehadiran'],
+            'nilai_kedisiplinan' => $data['nilai_kedisiplinan'],
+            'nilai_keterampilan' => $data['nilai_keterampilan'],
+            'nilai_sikap' => $data['nilai_sikap'],
+            'nilai_rata_rata' => $nilaiRataRata,
+            'umpan_balik' => $data['umpan_balik'],
+            'path_surat_nilai' => $suratNilaiPath,
+            'tanggal_penilaian' => now(),
+        ]);
+
+        // Update workflow status to evaluated
+        $dataMagang->update(['workflow_status' => 'evaluated']);
+
         return redirect()->route('penilaian.index')->with('success', 'Penilaian akhir berhasil dibuat');
     }
 
