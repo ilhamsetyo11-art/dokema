@@ -15,7 +15,13 @@ class PenilaianAkhirController extends Controller
         // Filter penilaian berdasarkan role pengguna (Issue #5)
         if (Auth::user()->role === 'magang') {
             // Peserta hanya bisa lihat penilaian milik sendiri
-            $dataMagang = Auth::user()->profilPeserta->dataMagang;
+            $profilPeserta = Auth::user()->profilPeserta;
+            if (!$profilPeserta) {
+                return view('magang.penilaian.index', ['penilaianList' => []]);
+            }
+
+            // dataMagang is hasMany, so get first record
+            $dataMagang = $profilPeserta->dataMagang()->first();
             if (!$dataMagang || !$dataMagang->penilaianAkhir) {
                 return view('magang.penilaian.index', ['penilaianList' => []]);
             }

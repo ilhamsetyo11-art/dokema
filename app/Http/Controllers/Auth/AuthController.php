@@ -38,7 +38,8 @@ class AuthController extends Controller
             // Check if magang user is approved before allowing login
             if ($user->role === 'magang') {
                 $profilPeserta = $user->profilPeserta;
-                $dataMagang = $profilPeserta->dataMagang ?? null;
+                // dataMagang is hasMany, get first record
+                $dataMagang = $profilPeserta->dataMagang()->first() ?? null;
 
                 if (!$dataMagang || $dataMagang->workflow_status !== 'approved') {
                     Auth::logout();
@@ -154,7 +155,8 @@ class AuthController extends Controller
             return redirect()->route('login');
         }
 
-        $dataMagang = $user->profilPeserta->dataMagang ?? null;
+        // dataMagang is hasMany, get first record
+        $dataMagang = $user->profilPeserta->dataMagang()->first() ?? null;
 
         return view('auth.waiting-approval', compact('user', 'dataMagang'));
     }

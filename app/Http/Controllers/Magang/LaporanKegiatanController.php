@@ -15,7 +15,13 @@ class LaporanKegiatanController extends Controller
         // Filter laporan berdasarkan role pengguna (Issue #5)
         if (Auth::user()->role === 'magang') {
             // Peserta hanya bisa lihat laporan milik sendiri
-            $dataMagang = Auth::user()->profilPeserta->dataMagang;
+            $profilPeserta = Auth::user()->profilPeserta;
+            if (!$profilPeserta) {
+                return view('magang.laporan.index', ['laporan' => []]);
+            }
+
+            // dataMagang is hasMany, so get first record
+            $dataMagang = $profilPeserta->dataMagang()->first();
             if (!$dataMagang) {
                 return view('magang.laporan.index', ['laporan' => []]);
             }
