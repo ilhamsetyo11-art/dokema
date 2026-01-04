@@ -70,14 +70,48 @@
             </a>
         @endforeach
 
-        <!-- Logout -->
-        <div class="mt-8 pt-6 border-t border-blue-700">
-            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center px-3 py-3 text-sm font-medium text-red-300 hover:bg-red-600 hover:text-white rounded-lg transition-colors duration-200">
-                <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                </svg>
-                Logout
-            </a>
+        <!-- User Profile Dropdown -->
+        <div x-data="{ open: false }" class="mt-8 pt-6 border-t border-blue-700">
+            <button @click="open = !open" class="w-full flex items-center px-3 py-3 text-sm font-medium text-gray-200 hover:bg-blue-800 rounded-lg transition-colors duration-200">
+                <div class="flex items-center flex-1">
+                    <div class="flex-shrink-0 h-9 w-9 rounded-full bg-blue-700 flex items-center justify-center mr-3">
+                        <svg class="h-5 w-5 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div class="flex-1 text-left">
+                        <p class="text-sm font-semibold text-white">{{ auth()->user()->name }}</p>
+                        <p class="text-xs text-blue-300 capitalize">{{ auth()->user()->role }}</p>
+                    </div>
+                    <svg class="ml-2 h-5 w-5 text-blue-300 transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" @click.away="open = false" class="mt-2 mx-3 bg-blue-800 rounded-lg shadow-lg py-2">
+
+                <!-- Profil Saya -->
+                <a href="{{ route('profil.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-blue-700 hover:text-white transition-colors duration-150" @click="sidebarOpen = false">
+                    <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    Profil Saya
+                </a>
+
+                <!-- Divider -->
+                <div class="my-1 border-t border-blue-700"></div>
+
+                <!-- Logout -->
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center px-4 py-2 text-sm text-red-300 hover:bg-red-600 hover:text-white transition-colors duration-150">
+                    <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    Logout
+                </a>
+            </div>
+
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                 @csrf
             </form>
