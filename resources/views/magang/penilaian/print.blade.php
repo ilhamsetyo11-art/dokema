@@ -339,7 +339,7 @@
     <div>
         <p><strong>Dengan memperhatikan beberapa pertimbangan penilaian diatas, maka penyelia memberikan nilai:</strong></p>
         <p style="margin: 10px 0 20px 20px; font-size: 14pt;">
-            <strong>{{ number_format($penilaian->rata_rata, 2) }}</strong> (diisi dengan nilai huruf)
+            <strong>{{ $penilaian->nilai_huruf }}</strong> dengan rata-rata <strong>{{ number_format($penilaian->rata_rata, 2) }}</strong> ({{ $penilaian->keterangan }})
         </p>
     </div>
 
