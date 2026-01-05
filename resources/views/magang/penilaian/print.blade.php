@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulir Penilaian Praktek Kerja Lapangan - {{ $penilaian->dataMagang->profilPeserta->nama }}</title>
+    <title>Formulir Penilaian Praktek Kerja Lapangan - {{ $penilaian->dataMagang->profilPeserta->nama_peserta }}</title>
     <style>
         @media print {
             @page {
@@ -206,10 +206,9 @@
 
     <!-- Kop Surat -->
     <div class="kop-surat">
-        <img src="{{ asset('logo/logo.png') }}" alt="Logo DOKEMA" class="kop-logo">
+        <img src="{{ asset('logo/telkom_logo.png') }}" alt="Logo DOKEMA" class="kop-logo">
         <div class="kop-text">
-            <h1>SISTEM MANAJEMEN MAGANG</h1>
-            <h2>DOKEMA</h2>
+            <h1>TELKOM AKSES</h1>
             <p>Jl. Contoh Alamat No. 123 Kota, Provinsi 12345 Indonesia</p>
             <p>T: (0291) 123456, E: info@dokema.id, W: dokema.id</p>
         </div>
@@ -253,7 +252,7 @@
         <div class="info-row">
             <div class="info-label">Nama Mahasiswa</div>
             <div class="info-separator">:</div>
-            <div class="info-value">{{ $penilaian->dataMagang->profilPeserta->nama }}</div>
+            <div class="info-value">{{ $penilaian->dataMagang->profilPeserta->nama_peserta }}</div>
         </div>
         <div class="info-row">
             <div class="info-label">Nomor Pokok Mahasiswa</div>

@@ -40,12 +40,12 @@
                                     <div class="flex-shrink-0 h-10 w-10">
                                         <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
                                             <span class="text-blue-600 font-medium text-sm">
-                                                {{ substr($magang->profilPeserta->nama, 0, 2) }}
+                                                {{ substr($magang->profilPeserta->nama_peserta, 0, 2) }}
                                             </span>
                                         </div>
                                     </div>
                                     <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">{{ $magang->profilPeserta->nama }}</div>
+                                        <div class="text-sm font-medium text-gray-900">{{ $magang->profilPeserta->nama_peserta }}</div>
                                         <div class="text-sm text-gray-500">{{ $magang->profilPeserta->nim }}</div>
                                     </div>
                                 </div>
@@ -92,6 +92,16 @@
                                             </svg>
                                             View
                                         </a>
+
+                                        <!-- Edit (Pembimbing & HR only) -->
+                                        @if (in_array(Auth::user()->role, ['pembimbing', 'hr']))
+                                            <a href="{{ route('penilaian.edit', $magang->penilaianAkhir->id) }}" class="inline-flex items-center px-3 py-1.5 bg-yellow-600 text-white text-xs font-medium rounded hover:bg-yellow-700 transition" title="Edit Nilai">
+                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                </svg>
+                                                Edit
+                                            </a>
+                                        @endif
 
                                         <!-- Print -->
                                         <a href="{{ route('penilaian.print', $magang->penilaianAkhir->id) }}" target="_blank" class="inline-flex items-center px-3 py-1.5 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 transition" title="Cetak">

@@ -28,7 +28,7 @@
                         <x-admin.form-select name="data_magang_id" label="Pilih Peserta Magang" required="true" placeholder="-- Pilih Peserta --">
                             @foreach ($dataMagangList as $magang)
                                 <option value="{{ $magang->id }}" {{ old('data_magang_id', $selectedMagang?->id ?? request('data_magang_id')) == $magang->id ? 'selected' : '' }}>
-                                    {{ $magang->profilPeserta->nama }} - {{ $magang->profilPeserta->nim }} ({{ $magang->profilPeserta->universitas }})
+                                    {{ $magang->profilPeserta->nama_peserta }} - {{ $magang->profilPeserta->nim }} ({{ $magang->profilPeserta->universitas }})
                                 </option>
                             @endforeach
                         </x-admin.form-select>

@@ -205,31 +205,48 @@ class PenilaianAkhirController extends Controller
 
         $data = $request->validate([
             'data_magang_id' => 'required|exists:data_magang,id',
-            'nilai_kehadiran' => 'required|numeric|min:0|max:100',
-            'nilai_kedisiplinan' => 'required|numeric|min:0|max:100',
-            'nilai_keterampilan' => 'required|numeric|min:0|max:100',
-            'nilai_sikap' => 'required|numeric|min:0|max:100',
-            'umpan_balik' => 'required|string|min:20',
-            'surat_nilai' => 'nullable|file|mimes:pdf',
+            'nilai_keputusan_pemberi' => 'required|numeric|min:0|max:100',
+            'nilai_disiplin' => 'required|numeric|min:0|max:100',
+            'nilai_prioritas' => 'required|numeric|min:0|max:100',
+            'nilai_tepat_waktu' => 'required|numeric|min:0|max:100',
+            'nilai_bekerja_sama' => 'required|numeric|min:0|max:100',
+            'nilai_bekerja_mandiri' => 'required|numeric|min:0|max:100',
+            'nilai_ketelitian' => 'required|numeric|min:0|max:100',
+            'nilai_belajar_menyerap' => 'required|numeric|min:0|max:100',
+            'nilai_analisa_merancang' => 'required|numeric|min:0|max:100',
+            'umpan_balik' => 'nullable|string',
         ]);
 
-        // Calculate average score
-        $nilaiRataRata = ($data['nilai_kehadiran'] + $data['nilai_kedisiplinan'] +
-            $data['nilai_keterampilan'] + $data['nilai_sikap']) / 4;
+        // Calculate jumlah and rata-rata
+        $jumlahNilai = $data['nilai_keputusan_pemberi'] + $data['nilai_disiplin'] +
+            $data['nilai_prioritas'] + $data['nilai_tepat_waktu'] +
+            $data['nilai_bekerja_sama'] + $data['nilai_bekerja_mandiri'] +
+            $data['nilai_ketelitian'] + $data['nilai_belajar_menyerap'] +
+            $data['nilai_analisa_merancang'];
+
+        $rataRata = $jumlahNilai / 9;
+
+        // Konversi nilai
+        $konversi = PenilaianAkhir::konversiNilai($rataRata);
 
         $updateData = [
             'data_magang_id' => $data['data_magang_id'],
-            'nilai_kehadiran' => $data['nilai_kehadiran'],
-            'nilai_kedisiplinan' => $data['nilai_kedisiplinan'],
-            'nilai_keterampilan' => $data['nilai_keterampilan'],
-            'nilai_sikap' => $data['nilai_sikap'],
-            'nilai_rata_rata' => $nilaiRataRata,
+            'nilai_keputusan_pemberi' => $data['nilai_keputusan_pemberi'],
+            'nilai_disiplin' => $data['nilai_disiplin'],
+            'nilai_prioritas' => $data['nilai_prioritas'],
+            'nilai_tepat_waktu' => $data['nilai_tepat_waktu'],
+            'nilai_bekerja_sama' => $data['nilai_bekerja_sama'],
+            'nilai_bekerja_mandiri' => $data['nilai_bekerja_mandiri'],
+            'nilai_ketelitian' => $data['nilai_ketelitian'],
+            'nilai_belajar_menyerap' => $data['nilai_belajar_menyerap'],
+            'nilai_analisa_merancang' => $data['nilai_analisa_merancang'],
+            'jumlah_nilai' => $jumlahNilai,
+            'rata_rata' => $rataRata,
+            'nilai_huruf' => $konversi['huruf'],
+            'bobot' => $konversi['bobot'],
+            'keterangan' => $konversi['keterangan'],
             'umpan_balik' => $data['umpan_balik'],
         ];
-
-        if ($request->hasFile('surat_nilai')) {
-            $updateData['path_surat_nilai'] = $request->file('surat_nilai')->store('surat_nilai', 'public');
-        }
 
         $penilaian->update($updateData);
         return redirect()->route('penilaian.index')->with('success', 'Penilaian akhir berhasil diupdate');
