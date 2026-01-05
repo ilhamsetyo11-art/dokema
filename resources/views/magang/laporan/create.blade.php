@@ -8,7 +8,7 @@
             'laporan' => null,
             'action' => route('laporan.store'),
             'method' => 'POST',
-            'magangs' => $dataMagangList,
+            'magangs' => $magangs,
         ])
     </div>
 </x-admin-layouts>

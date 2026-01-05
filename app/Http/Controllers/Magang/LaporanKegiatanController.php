@@ -55,17 +55,19 @@ class LaporanKegiatanController extends Controller
             if (!$dataMagang) {
                 return redirect()->route('laporan.index')->with('error', 'Data magang tidak ditemukan');
             }
-            return view('magang.laporan.create', compact('dataMagang'));
+            // Wrap in collection untuk konsistensi dengan form yang expect array
+            $magangs = collect([$dataMagang]);
+            return view('magang.laporan.create', compact('magangs'));
         } elseif ($user->role === 'pembimbing') {
             // Pembimbing can create for peserta they supervise
-            $dataMagangList = DataMagang::where('pembimbing_id', $user->id)
+            $magangs = DataMagang::where('pembimbing_id', $user->id)
                 ->with('profilPeserta')
                 ->get();
-            return view('magang.laporan.create', compact('dataMagangList'));
+            return view('magang.laporan.create', compact('magangs'));
         } else {
             // HR can create for any peserta
-            $dataMagangList = DataMagang::with('profilPeserta')->get();
-            return view('magang.laporan.create', compact('dataMagangList'));
+            $magangs = DataMagang::with('profilPeserta')->get();
+            return view('magang.laporan.create', compact('magangs'));
         }
     }
 
@@ -133,19 +135,21 @@ class LaporanKegiatanController extends Controller
             if (!$dataMagang || $laporan->data_magang_id !== $dataMagang->id) {
                 abort(403, 'Unauthorized');
             }
-            return view('magang.laporan.edit', compact('laporan'));
+            // Wrap in collection untuk konsistensi dengan form
+            $magangs = collect([$dataMagang]);
+            return view('magang.laporan.edit', compact('laporan', 'magangs'));
         } elseif ($user->role === 'pembimbing') {
             if ($laporan->dataMagang->pembimbing_id !== $user->id) {
                 abort(403, 'Unauthorized');
             }
-            $dataMagangList = DataMagang::where('pembimbing_id', $user->id)
+            $magangs = DataMagang::where('pembimbing_id', $user->id)
                 ->with('profilPeserta')
                 ->get();
-            return view('magang.laporan.edit', compact('laporan', 'dataMagangList'));
+            return view('magang.laporan.edit', compact('laporan', 'magangs'));
         } else {
             // HR can edit any
-            $dataMagangList = DataMagang::with('profilPeserta')->get();
-            return view('magang.laporan.edit', compact('laporan', 'dataMagangList'));
+            $magangs = DataMagang::with('profilPeserta')->get();
+            return view('magang.laporan.edit', compact('laporan', 'magangs'));
         }
     }
 

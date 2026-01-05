@@ -6,9 +6,9 @@
     <div class="max-w-4xl mx-auto">
         @include('magang.laporan.form', [
             'laporan' => $laporan,
-            'action' => route('laporan.update', [$magangId, $laporan->id]),
+            'action' => route('laporan.update', $laporan->id),
             'method' => 'PUT',
-            'magangs' => $dataMagangList,
+            'magangs' => $magangs,
         ])
     </div>
 </x-admin-layouts>
