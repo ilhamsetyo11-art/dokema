@@ -44,6 +44,26 @@ class LaporanKegiatanController extends Controller
         return view('magang.laporan.index', compact('laporan'));
     }
 
+    public function show($id)
+    {
+        $laporan = LaporanKegiatan::with(['dataMagang.profilPeserta', 'dataMagang.pembimbing', 'verifiedBy'])->findOrFail($id);
+        $user = Auth::user();
+
+        // Verify access
+        if ($user->role === 'magang') {
+            $dataMagang = $user->profilPeserta->dataMagang()->first();
+            if (!$dataMagang || $laporan->data_magang_id !== $dataMagang->id) {
+                abort(403, 'Unauthorized');
+            }
+        } elseif ($user->role === 'pembimbing') {
+            if ($laporan->dataMagang->pembimbing_id !== $user->id) {
+                abort(403, 'Unauthorized');
+            }
+        }
+
+        return view('magang.laporan.show', compact('laporan'));
+    }
+
     public function create()
     {
         $user = Auth::user();
@@ -80,7 +100,7 @@ class LaporanKegiatanController extends Controller
             $data = $request->validate([
                 'tanggal_laporan' => 'required|date',
                 'deskripsi' => 'required|string|min:2',
-                'lampiran' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+                'path_file_laporan' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:2048',
             ]);
 
             // Auto-fill data_magang_id for magang
@@ -94,7 +114,7 @@ class LaporanKegiatanController extends Controller
                 'data_magang_id' => 'required|exists:data_magang,id',
                 'tanggal_laporan' => 'required|date',
                 'deskripsi' => 'required|string|min:20',
-                'lampiran' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+                'path_file_laporan' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:2048',
             ]);
 
             // Verify pembimbing has access
@@ -108,10 +128,14 @@ class LaporanKegiatanController extends Controller
             }
         }
 
+        // Handle file upload
         $lampiranPath = null;
-        if ($request->hasFile('lampiran')) {
-            $lampiranPath = $request->file('lampiran')->store('laporan/lampiran', 'public');
+        if ($request->hasFile('path_file_laporan')) {
+            $lampiranPath = $request->file('path_file_laporan')->store('laporan/lampiran', 'public');
         }
+
+        // Remove path_file_laporan from data array to avoid passing file object to create
+        unset($data['path_file_laporan']);
 
         LaporanKegiatan::create([
             'data_magang_id' => $data['data_magang_id'],
@@ -168,7 +192,7 @@ class LaporanKegiatanController extends Controller
             $data = $request->validate([
                 'tanggal_laporan' => 'required|date',
                 'deskripsi' => 'required|string|min:2',
-                'lampiran' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+                'path_file_laporan' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:2048',
             ]);
             $data['data_magang_id'] = $dataMagang->id;
         } else {
@@ -177,7 +201,7 @@ class LaporanKegiatanController extends Controller
                 'data_magang_id' => 'required|exists:data_magang,id',
                 'tanggal_laporan' => 'required|date',
                 'deskripsi' => 'required|string|min:20',
-                'lampiran' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+                'path_file_laporan' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:2048',
             ]);
 
             // Verify pembimbing access
@@ -195,8 +219,8 @@ class LaporanKegiatanController extends Controller
             }
         }
 
-        if ($request->hasFile('lampiran')) {
-            $lampiranPath = $request->file('lampiran')->store('laporan/lampiran', 'public');
+        if ($request->hasFile('path_file_laporan')) {
+            $lampiranPath = $request->file('path_file_laporan')->store('laporan/lampiran', 'public');
         } else {
             $lampiranPath = $laporan->path_lampiran;
         }
@@ -221,6 +245,12 @@ class LaporanKegiatanController extends Controller
             $dataMagang = $user->profilPeserta->dataMagang()->first();
             if (!$dataMagang || $laporan->data_magang_id !== $dataMagang->id) {
                 abort(403, 'Unauthorized');
+            }
+            
+            // Magang hanya bisa hapus jika status masih pending
+            if ($laporan->status_verifikasi !== 'pending') {
+                return redirect()->route('laporan.index')
+                    ->with('error', 'Laporan yang sudah diverifikasi tidak dapat dihapus');
             }
         } elseif ($user->role === 'pembimbing') {
             if ($laporan->dataMagang->pembimbing_id !== $user->id) {

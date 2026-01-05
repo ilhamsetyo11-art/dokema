@@ -71,6 +71,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/magang/laporan', [LaporanKegiatanController::class, 'index'])->name('laporan.index');
     Route::get('/magang/laporan/create', [LaporanKegiatanController::class, 'create'])->name('laporan.create');
     Route::post('/magang/laporan', [LaporanKegiatanController::class, 'store'])->name('laporan.store');
+    Route::get('/magang/laporan/{id}', [LaporanKegiatanController::class, 'show'])->name('laporan.show');
     Route::middleware(['ownership'])->group(function () {
         Route::get('/magang/laporan/{id}/edit', [LaporanKegiatanController::class, 'edit'])->name('laporan.edit');
         Route::put('/magang/laporan/{id}', [LaporanKegiatanController::class, 'update'])->name('laporan.update');

@@ -68,17 +68,7 @@
             <!-- Report Information -->
             <div class="bg-green-50 rounded-lg p-4">
                 <h4 class="text-sm font-medium text-gray-900 mb-4">Informasi Laporan</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <x-admin.form-input name="tanggal_laporan" label="Tanggal Laporan" type="date" :value="old('tanggal_laporan', $laporan->tanggal_laporan ?? '')" required="true" />
-
-                    <x-admin.form-select name="minggu_ke" label="Minggu Ke" required="true" placeholder="Pilih minggu">
-                        @for ($i = 1; $i <= 12; $i++)
-                            <option value="{{ $i }}" {{ old('minggu_ke', $laporan->minggu_ke ?? '') == $i ? 'selected' : '' }}>
-                                Minggu {{ $i }}
-                            </option>
-                        @endfor
-                    </x-admin.form-select>
-                </div>
+                <x-admin.form-input name="tanggal_laporan" label="Tanggal Laporan" type="date" :value="old('tanggal_laporan', $laporan->tanggal_laporan ?? '')" required="true" />
             </div>
 
             <!-- Activity Details -->
