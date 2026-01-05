@@ -97,9 +97,8 @@ Route::middleware(['auth'])->group(function () {
     // Pembimbing: lihat & buat penilaian untuk peserta yang dibimbing
     // HR: lihat semua penilaian
     Route::get('/penilaian', [PenilaianAkhirController::class, 'index'])->name('penilaian.index');
-    Route::get('/penilaian/{id}', [PenilaianAkhirController::class, 'show'])->name('penilaian.show');
 
-    // Create/Edit/Delete only for Pembimbing & HR
+    // Create/Edit/Delete only for Pembimbing & HR (MUST BE BEFORE {id} routes)
     Route::middleware(['role:pembimbing,hr'])->group(function () {
         Route::get('/penilaian/create', [PenilaianAkhirController::class, 'create'])->name('penilaian.create');
         Route::post('/penilaian', [PenilaianAkhirController::class, 'store'])->name('penilaian.store');
@@ -107,4 +106,8 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/penilaian/{id}', [PenilaianAkhirController::class, 'update'])->name('penilaian.update');
         Route::delete('/penilaian/{id}', [PenilaianAkhirController::class, 'destroy'])->name('penilaian.destroy');
     });
+
+    // Show & Print routes (AFTER create to avoid route collision)
+    Route::get('/penilaian/{id}', [PenilaianAkhirController::class, 'show'])->name('penilaian.show');
+    Route::get('/penilaian/{id}/print', [PenilaianAkhirController::class, 'print'])->name('penilaian.print');
 });

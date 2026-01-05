@@ -12,40 +12,34 @@ class PenilaianAkhirController extends Controller
 {
     public function index()
     {
-        // Filter penilaian berdasarkan role pengguna (Issue #5)
-        if (Auth::user()->role === 'magang') {
-            // Peserta hanya bisa lihat penilaian milik sendiri
-            $profilPeserta = Auth::user()->profilPeserta;
-            if (!$profilPeserta) {
-                return view('magang.penilaian.index', ['penilaianList' => []]);
-            }
+        $user = Auth::user();
 
-            // dataMagang is hasMany, so get first record
-            $dataMagang = $profilPeserta->dataMagang()->first();
-            if (!$dataMagang || !$dataMagang->penilaianAkhir) {
-                return view('magang.penilaian.index', ['penilaianList' => []]);
-            }
-            $penilaianList = collect([$dataMagang->penilaianAkhir]);
-        } elseif (Auth::user()->role === 'pembimbing') {
-            // Pembimbing hanya bisa lihat penilaian peserta yang dibimbing
-            $penilaianList = PenilaianAkhir::whereIn(
-                'data_magang_id',
-                Auth::user()->magangDibimbing->pluck('id')
-            )
-                ->with(['dataMagang.profilPeserta', 'dataMagang.pembimbing'])
+        // Get list peserta magang berdasarkan role
+        if ($user->role === 'pembimbing') {
+            // Pembimbing hanya lihat peserta yang dibimbing
+            $dataMagangList = DataMagang::where('pembimbing_id', $user->id)
+                ->with(['profilPeserta', 'penilaianAkhir'])
                 ->latest()
-                ->paginate(10);
+                ->get();
+        } elseif ($user->role === 'hr') {
+            // HR lihat semua peserta
+            $dataMagangList = DataMagang::with(['profilPeserta', 'pembimbing', 'penilaianAkhir'])
+                ->latest()
+                ->get();
         } else {
-            // HR bisa lihat semua penilaian
-            $penilaianList = PenilaianAkhir::with(['dataMagang.profilPeserta', 'dataMagang.pembimbing'])
-                ->latest()
-                ->paginate(10);
+            // Magang hanya lihat data sendiri
+            $profilPeserta = $user->profilPeserta;
+            if (!$profilPeserta) {
+                $dataMagangList = collect();
+            } else {
+                $dataMagangList = $profilPeserta->dataMagang()->with('penilaianAkhir')->get();
+            }
         }
 
-        return view('magang.penilaian.index', compact('penilaianList'));
+        return view('magang.penilaian.index', compact('dataMagangList'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $user = Auth::user();
 
@@ -54,19 +48,28 @@ class PenilaianAkhirController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        // Get list peserta for dropdown
+        // Get selected data_magang_id from query parameter
+        $selectedMagangId = $request->query('data_magang_id');
+
+        // Get list peserta for dropdown (hanya yang belum dinilai)
         if ($user->role === 'pembimbing') {
-            $dataMagang = DataMagang::where('pembimbing_id', $user->id)
-                ->whereDoesntHave('penilaianAkhir') // Only peserta without penilaian
+            $dataMagangList = DataMagang::where('pembimbing_id', $user->id)
+                ->whereDoesntHave('penilaianAkhir')
                 ->with('profilPeserta')
                 ->get();
-        } elseif ($user->role === 'hr') {
-            $dataMagang = DataMagang::whereDoesntHave('penilaianAkhir')
+        } else {
+            $dataMagangList = DataMagang::whereDoesntHave('penilaianAkhir')
                 ->with('profilPeserta')
                 ->get();
         }
 
-        return view('magang.penilaian.create', compact('dataMagang'));
+        // If selected ID provided, verify it's in the list
+        $selectedMagang = null;
+        if ($selectedMagangId) {
+            $selectedMagang = $dataMagangList->firstWhere('id', $selectedMagangId);
+        }
+
+        return view('magang.penilaian.create', compact('dataMagangList', 'selectedMagang'));
     }
 
     public function store(Request $request)
@@ -75,12 +78,17 @@ class PenilaianAkhirController extends Controller
 
         $data = $request->validate([
             'data_magang_id' => 'required|exists:data_magang,id',
-            'nilai_kehadiran' => 'required|numeric|min:0|max:100',
-            'nilai_kedisiplinan' => 'required|numeric|min:0|max:100',
-            'nilai_keterampilan' => 'required|numeric|min:0|max:100',
-            'nilai_sikap' => 'required|numeric|min:0|max:100',
-            'umpan_balik' => 'required|string|min:20',
-            'surat_nilai' => 'nullable|file|mimes:pdf',
+            'nilai_keputusan_pemberi' => 'required|numeric|min:0|max:100',
+            'nilai_disiplin' => 'required|numeric|min:0|max:100',
+            'nilai_prioritas' => 'required|numeric|min:0|max:100',
+            'nilai_tepat_waktu' => 'required|numeric|min:0|max:100',
+            'nilai_bekerja_sama' => 'required|numeric|min:0|max:100',
+            'nilai_bekerja_mandiri' => 'required|numeric|min:0|max:100',
+            'nilai_ketelitian' => 'required|numeric|min:0|max:100',
+            'nilai_belajar_menyerap' => 'required|numeric|min:0|max:100',
+            'nilai_analisa_merancang' => 'required|numeric|min:0|max:100',
+            'umpan_balik' => 'nullable|string',
+            'surat_nilai' => 'nullable|file|mimes:pdf|max:2048',
         ]);
 
         $dataMagang = DataMagang::findOrFail($data['data_magang_id']);
@@ -95,10 +103,19 @@ class PenilaianAkhirController extends Controller
             abort(403, 'Unauthorized - Anda tidak membimbing peserta ini');
         }
 
-        // Calculate average score
-        $nilaiRataRata = ($data['nilai_kehadiran'] + $data['nilai_kedisiplinan'] +
-            $data['nilai_keterampilan'] + $data['nilai_sikap']) / 4;
+        // Calculate jumlah and rata-rata
+        $jumlahNilai = $data['nilai_keputusan_pemberi'] + $data['nilai_disiplin'] +
+            $data['nilai_prioritas'] + $data['nilai_tepat_waktu'] +
+            $data['nilai_bekerja_sama'] + $data['nilai_bekerja_mandiri'] +
+            $data['nilai_ketelitian'] + $data['nilai_belajar_menyerap'] +
+            $data['nilai_analisa_merancang'];
 
+        $rataRata = $jumlahNilai / 9;
+
+        // Konversi nilai
+        $konversi = PenilaianAkhir::konversiNilai($rataRata);
+
+        // Handle file upload
         $suratNilaiPath = null;
         if ($request->hasFile('surat_nilai')) {
             $suratNilaiPath = $request->file('surat_nilai')->store('surat_nilai', 'public');
@@ -106,14 +123,24 @@ class PenilaianAkhirController extends Controller
 
         PenilaianAkhir::create([
             'data_magang_id' => $data['data_magang_id'],
-            'nilai_kehadiran' => $data['nilai_kehadiran'],
-            'nilai_kedisiplinan' => $data['nilai_kedisiplinan'],
-            'nilai_keterampilan' => $data['nilai_keterampilan'],
-            'nilai_sikap' => $data['nilai_sikap'],
-            'nilai_rata_rata' => $nilaiRataRata,
+            'nilai_keputusan_pemberi' => $data['nilai_keputusan_pemberi'],
+            'nilai_disiplin' => $data['nilai_disiplin'],
+            'nilai_prioritas' => $data['nilai_prioritas'],
+            'nilai_tepat_waktu' => $data['nilai_tepat_waktu'],
+            'nilai_bekerja_sama' => $data['nilai_bekerja_sama'],
+            'nilai_bekerja_mandiri' => $data['nilai_bekerja_mandiri'],
+            'nilai_ketelitian' => $data['nilai_ketelitian'],
+            'nilai_belajar_menyerap' => $data['nilai_belajar_menyerap'],
+            'nilai_analisa_merancang' => $data['nilai_analisa_merancang'],
+            'jumlah_nilai' => $jumlahNilai,
+            'rata_rata' => $rataRata,
+            'nilai_huruf' => $konversi['huruf'],
+            'bobot' => $konversi['bobot'],
+            'keterangan' => $konversi['keterangan'],
+            'penilai_id' => $user->id,
+            'tanggal_penilaian' => now(),
             'umpan_balik' => $data['umpan_balik'],
             'path_surat_nilai' => $suratNilaiPath,
-            'tanggal_penilaian' => now(),
         ]);
 
         // Update workflow status to evaluated
@@ -220,5 +247,30 @@ class PenilaianAkhirController extends Controller
 
         $penilaian->delete();
         return redirect()->route('penilaian.index')->with('success', 'Penilaian akhir berhasil dihapus');
+    }
+
+    public function print($id)
+    {
+        $penilaian = PenilaianAkhir::with([
+            'dataMagang.profilPeserta',
+            'dataMagang.pembimbing',
+            'penilai'
+        ])->findOrFail($id);
+
+        $user = Auth::user();
+
+        // Verify access
+        if ($user->role === 'magang') {
+            $dataMagang = $user->profilPeserta->dataMagang()->first();
+            if (!$dataMagang || $penilaian->data_magang_id !== $dataMagang->id) {
+                abort(403, 'Unauthorized');
+            }
+        } elseif ($user->role === 'pembimbing') {
+            if ($penilaian->dataMagang->pembimbing_id !== $user->id) {
+                abort(403, 'Unauthorized');
+            }
+        }
+
+        return view('magang.penilaian.print', compact('penilaian'));
     }
 }
