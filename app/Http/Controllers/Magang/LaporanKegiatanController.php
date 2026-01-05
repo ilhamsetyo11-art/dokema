@@ -118,7 +118,7 @@ class LaporanKegiatanController extends Controller
             'tanggal_laporan' => $data['tanggal_laporan'],
             'deskripsi' => $data['deskripsi'],
             'path_lampiran' => $lampiranPath,
-            'status_verifikasi' => 'menunggu',
+            'status_verifikasi' => 'pending',
         ]);
 
         return redirect()->route('laporan.index')->with('success', 'Laporan berhasil dibuat');
@@ -247,7 +247,7 @@ class LaporanKegiatanController extends Controller
         }
 
         $laporan->update([
-            'status_verifikasi' => 'disetujui',
+            'status_verifikasi' => 'verified',
             'verified_by' => Auth::id(),
             'verified_at' => now(),
         ]);
@@ -274,7 +274,7 @@ class LaporanKegiatanController extends Controller
         ]);
 
         $laporan->update([
-            'status_verifikasi' => 'revisi',
+            'status_verifikasi' => 'rejected',
             'verified_by' => Auth::id(),
             'verified_at' => now(),
             'catatan_verifikasi' => $request->catatan_verifikasi,
