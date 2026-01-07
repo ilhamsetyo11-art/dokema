@@ -63,12 +63,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/magang', [DataMagangController::class, 'index'])->name('magang.index');
     Route::get('/magang/create', [DataMagangController::class, 'create'])->name('magang.create');
     Route::post('/magang', [DataMagangController::class, 'store'])->name('magang.store');
-    Route::get('/magang/{id}', [DataMagangController::class, 'show'])->name('magang.show');
-    Route::get('/magang/{id}/edit', [DataMagangController::class, 'edit'])->name('magang.edit');
-    Route::put('/magang/{id}', [DataMagangController::class, 'update'])->name('magang.update');
-    Route::delete('/magang/{id}', [DataMagangController::class, 'destroy'])->name('magang.destroy');
 
-    // Laporan Kegiatan
+    // Laporan Kegiatan (HARUS SEBELUM /magang/{id} untuk menghindari route collision)
     Route::get('/magang/laporan', [LaporanKegiatanController::class, 'index'])->name('laporan.index');
     Route::get('/magang/laporan/create', [LaporanKegiatanController::class, 'create'])->name('laporan.create');
     Route::post('/magang/laporan', [LaporanKegiatanController::class, 'store'])->name('laporan.store');
@@ -84,6 +80,12 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/laporan/{id}/approve', [LaporanKegiatanController::class, 'approve'])->name('laporan.approve');
         Route::post('/laporan/{id}/reject', [LaporanKegiatanController::class, 'reject'])->name('laporan.reject');
     });
+
+    // Data Magang detail routes (HARUS DI BAWAH /magang/laporan untuk menghindari collision)
+    Route::get('/magang/{id}', [DataMagangController::class, 'show'])->name('magang.show');
+    Route::get('/magang/{id}/edit', [DataMagangController::class, 'edit'])->name('magang.edit');
+    Route::put('/magang/{id}', [DataMagangController::class, 'update'])->name('magang.update');
+    Route::delete('/magang/{id}', [DataMagangController::class, 'destroy'])->name('magang.destroy');
 
     // Log Bimbingan - Flat routes (filter di controller berdasarkan role)
     Route::get('/bimbingan', [LogBimbinganController::class, 'index'])->name('bimbingan.index');

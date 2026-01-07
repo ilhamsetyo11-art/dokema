@@ -35,6 +35,8 @@
                             @if (isset($dataMagang) && $dataMagang)
                                 @if ($dataMagang->status === 'diterima')
                                     <p class="text-2xl font-bold text-green-600">Diterima</p>
+                                @elseif($dataMagang->status === 'selesai')
+                                    <p class="text-2xl font-bold text-blue-600">Selesai</p>
                                 @elseif($dataMagang->status === 'ditolak')
                                     <p class="text-2xl font-bold text-red-600">Ditolak</p>
                                 @else
@@ -176,62 +178,6 @@
             </div>
         </div>
 
-        <!-- Charts and Recent Activities -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Status Magang Chart -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Status Magang</h3>
-                <div class="space-y-3">
-                    @php
-                        $colors = ['diterima' => 'green', 'menunggu' => 'yellow', 'ditolak' => 'red'];
-                        $totalStatus = array_sum($statusMagang);
-                    @endphp
-                    @foreach ($statusMagang as $status => $count)
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <div class="w-4 h-4 rounded-full bg-{{ $colors[$status] ?? 'gray' }}-500 mr-2"></div>
-                                <span class="text-sm font-medium text-gray-700 capitalize">{{ $status }}</span>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="text-sm text-gray-600 mr-2">{{ $count }}</span>
-                                <span class="text-xs text-gray-500">({{ $totalStatus > 0 ? round(($count / $totalStatus) * 100, 1) : 0 }}%)</span>
-                            </div>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2">
-                            <div class="bg-{{ $colors[$status] ?? 'gray' }}-500 h-2 rounded-full" style="width: {{ $totalStatus > 0 ? ($count / $totalStatus) * 100 : 0 }}%"></div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-
-            <!-- Magang Akan Berakhir -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Magang Akan Berakhir</h3>
-                <div class="space-y-3">
-                    @forelse($magangAkanBerakhir as $magang)
-                        <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
-                            <div>
-                                <p class="font-medium text-gray-900">{{ $magang->profilPeserta->nama ?? 'N/A' }}</p>
-                                <p class="text-sm text-gray-600">Program Magang</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm font-medium text-red-600">
-                                    {{ $magang->tanggal_selesai ? \Carbon\Carbon::parse($magang->tanggal_selesai)->format('d M Y') : 'N/A' }}
-                                </p>
-                                <p class="text-xs text-gray-500">
-                                    {{ $magang->tanggal_selesai ? \Carbon\Carbon::parse($magang->tanggal_selesai)->diffForHumans() : 'N/A' }}
-                                </p>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="text-center py-4">
-                            <p class="text-gray-500">Tidak ada magang yang akan berakhir dalam 30 hari ke depan</p>
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-        </div>
-
         <!-- Recent Activities -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Laporan Terbaru -->
@@ -337,18 +283,11 @@
                     </a>
                 @endif
 
-                <a href="{{ route('profil.index') }}" class="flex flex-col items-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">
+                <a href="{{ route('profil.my-profile') }}" class="flex flex-col items-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">
                     <svg class="w-8 h-8 text-indigo-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                     </svg>
                     <span class="text-sm font-medium text-indigo-700">{{ Auth::user()->role === 'magang' ? 'Profil Saya' : 'Kelola Profil' }}</span>
-                </a>
-
-                <a href="{{ route('magang.index') }}" class="flex flex-col items-center p-4 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors">
-                    <svg class="w-8 h-8 text-pink-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2V6"></path>
-                    </svg>
-                    <span class="text-sm font-medium text-pink-700">{{ Auth::user()->role === 'magang' ? 'Data Magang' : 'Kelola Magang' }}</span>
                 </a>
             </div>
         </div>
