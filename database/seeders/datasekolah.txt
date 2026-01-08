@@ -1,0 +1,14 @@
+Kabupaten Kudus
+- SMK Negeri 1 Kudus (Jurusan: RPL)
+- SMK NU Ma’arif Kudus (Jurusan: TKJ)
+- SMK Wisudha Karya (Jurusan: TKJ)
+
+Kabupaten Pati
+- SMK Negeri 2 Pati (Jurusan: TKJ)
+- SMK Kesuma Margoyoso (Jurusan: TKJ)
+- SMK Cordova Margoyoso (Jurusan: TKJ)
+- SMK ABDI NEGARA Pati (Jurusan: TKJ)
+
+Kabupaten Jepara
+- SMK Negeri 1 Jepara (Jurusan: TKJ)
+- SMK Walisongo Pecangaan (Jurusan: TKJ)

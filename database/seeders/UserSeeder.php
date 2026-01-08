@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
         // Admin/HR Users
         User::create([
             'name' => 'Admin HR',
-            'email' => 'admin@dokema.com',
+            'email' => 'admin@telkomakses.co.id',
             'password' => Hash::make('password'),
             'role' => 'hr',
             'email_verified_at' => now(),
@@ -25,24 +25,24 @@ class UserSeeder extends Seeder
 
         // Pembimbing Users
         User::create([
-            'name' => 'Dr. Budi Santoso',
-            'email' => 'budi.santoso@dokema.com',
+            'name' => 'Budi Santoso',
+            'email' => 'budi.santoso@telkomakses.co.id',
             'password' => Hash::make('password'),
             'role' => 'pembimbing',
             'email_verified_at' => now(),
         ]);
 
         User::create([
-            'name' => 'Ir. Sari Wulandari',
-            'email' => 'sari.wulandari@dokema.com',
+            'name' => 'Sari Wulandari',
+            'email' => 'sari.wulandari@telkomakses.co.id',
             'password' => Hash::make('password'),
             'role' => 'pembimbing',
             'email_verified_at' => now(),
         ]);
 
         User::create([
-            'name' => 'Ahmad Rizki, S.T.',
-            'email' => 'ahmad.rizki@dokema.com',
+            'name' => 'Ahmad Rizki',
+            'email' => 'ahmad.rizki@telkomakses.co.id',
             'password' => Hash::make('password'),
             'role' => 'pembimbing',
             'email_verified_at' => now(),
