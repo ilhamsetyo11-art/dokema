@@ -24,6 +24,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIM</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Universitas</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jurusan</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">tambahan</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Telepon</th>
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider no-sort">Aksi</th>
                     </tr>
@@ -48,6 +49,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $profil->nim }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $profil->universitas }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $profil->jurusan }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $profil->tambahan }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $profil->no_telepon }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div class="flex items-center justify-end space-x-3">

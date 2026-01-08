@@ -167,9 +167,9 @@
 
                 <!-- Contact Info -->
                 <div class="rounded-lg bg-gray-50 p-4 border border-gray-200">
-                    <h4 class="font-semibold text-gray-900 mb-3">Kontak HRD Grapari Kudus</h4>
+                    <h4 class="font-semibold text-gray-900 mb-3">Kontak HRD Telkom Akses Kudus</h4>
                     <div class="space-y-2 text-sm text-gray-600">
-                        <p><strong>Email:</strong> hrd@grapari-kudus.telkom.co.id</p>
+                        <p><strong>Email:</strong> hrd-kudus@telkomakses.co.id</p>
                         <p><strong>Telepon:</strong> +62 (0) 291 123 4567</p>
                         <p><strong>Jam Kerja:</strong> Senin - Jumat, 08:00 - 16:30 WIB</p>
                     </div>

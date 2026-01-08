@@ -93,7 +93,7 @@
                     </div>
                 </div>
 
-                <!-- Total Magang -->
+                {{-- <!-- Total Magang -->
                 <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
                     <div class="flex items-center justify-between">
                         <div>
@@ -106,7 +106,7 @@
                             </svg>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Magang Aktif -->
                 <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-500">

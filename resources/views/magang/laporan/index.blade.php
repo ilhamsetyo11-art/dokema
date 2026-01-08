@@ -41,7 +41,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider no-sort">Lampiran</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catatan</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catatan Reject</th>
                             <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider no-sort">Aksi</th>
                         </tr>
                     </x-slot>
@@ -56,7 +56,7 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
                                 @if ($l->status_verifikasi === 'disetujui') bg-green-100 text-green-800
                                 @elseif($l->status_verifikasi === 'menunggu') bg-yellow-100 text-yellow-800
                                 @elseif($l->status_verifikasi === 'revisi') bg-red-100 text-red-800

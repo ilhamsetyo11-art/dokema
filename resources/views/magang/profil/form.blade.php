@@ -47,6 +47,7 @@
                     <x-admin.form-input name="universitas" label="Universitas" type="text" :value="old('universitas', $profil->universitas ?? '')" required="true" placeholder="Nama universitas" />
 
                     <x-admin.form-input name="jurusan" label="Jurusan/Program Studi" type="text" :value="old('jurusan', $profil->jurusan ?? '')" required="true" placeholder="Nama jurusan atau program studi" />
+                    <x-admin.form-input name="tambahan" label="tambahan/Program Studi" type="text" :value="old('tambahan', $profil->tambahan ?? '')" required="true" placeholder="Nama tambahan atau program studi" />
                 </div>
             </div>
 

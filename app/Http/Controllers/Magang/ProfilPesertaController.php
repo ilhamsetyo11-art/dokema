@@ -54,13 +54,14 @@ class ProfilPesertaController extends Controller
         }
 
         $data = $request->validate([
-            'user_id' => 'required|exists:users,id|unique:profil_peserta,user_id',
-            'nama_peserta' => 'required|string|max:255',
-            'nim' => 'required|string|unique:profil_peserta,nim',
-            'universitas' => 'required|string|max:255',
-            'jurusan' => 'required|string|max:255',
-            'no_hp' => 'required|string|max:20',
+            'user_id' => 'nullable|exists:users,id|unique:profil_peserta,user_id',
+            'nama_peserta' => 'nullable|string|max:255',
+            'nim' => 'nullable|string|unique:profil_peserta,nim',
+            'universitas' => 'nullable|string|max:255',
+            'jurusan' => 'nullable|string|max:255',
+            'no_hp' => 'nullable|string|max:20',
             'alamat' => 'nullable|string',
+            'tambahan' => 'nullable',
         ]);
 
         ProfilPeserta::create($data);
@@ -106,12 +107,13 @@ class ProfilPesertaController extends Controller
             }
             // Magang cannot change user_id
             $data = $request->validate([
-                'nama_peserta' => 'required|string|max:255',
-                'nim' => 'required|string|unique:profil_peserta,nim,' . $profil->id,
-                'universitas' => 'required|string|max:255',
-                'jurusan' => 'required|string|max:255',
-                'no_hp' => 'required|string|max:20',
+                'nama_peserta' => 'nullable|string|max:255',
+                'nim' => 'nullable|string|unique:profil_peserta,nim,' . $profil->id,
+                'universitas' => 'nullable|string|max:255',
+                'jurusan' => 'nullable|string|max:255',
+                'no_hp' => 'nullable|string|max:20',
                 'alamat' => 'nullable|string',
+                'tambahan' => 'nullable',
             ]);
             $data['user_id'] = $profil->user_id; // Keep original
         } elseif ($user->role === 'pembimbing') {
@@ -122,24 +124,26 @@ class ProfilPesertaController extends Controller
             }
             // Pembimbing can update but not user_id
             $data = $request->validate([
-                'nama_peserta' => 'required|string|max:255',
-                'nim' => 'required|string|unique:profil_peserta,nim,' . $profil->id,
-                'universitas' => 'required|string|max:255',
-                'jurusan' => 'required|string|max:255',
-                'no_hp' => 'required|string|max:20',
+                'nama_peserta' => 'nullable|string|max:255',
+                'nim' => 'nullable|string|unique:profil_peserta,nim,' . $profil->id,
+                'universitas' => 'nullable|string|max:255',
+                'jurusan' => 'nullable|string|max:255',
+                'no_hp' => 'nullable|string|max:20',
                 'alamat' => 'nullable|string',
+                'tambahan' => 'nullable',
             ]);
             $data['user_id'] = $profil->user_id; // Keep original
         } else {
             // HR can change everything including user_id
             $data = $request->validate([
-                'user_id' => 'required|exists:users,id',
-                'nama_peserta' => 'required|string|max:255',
-                'nim' => 'required|string|unique:profil_peserta,nim,' . $profil->id,
-                'universitas' => 'required|string|max:255',
-                'jurusan' => 'required|string|max:255',
-                'no_hp' => 'required|string|max:20',
+                'user_id' => 'nullable|exists:users,id',
+                'nama_peserta' => 'nullable|string|max:255',
+                'nim' => 'nullable|string|unique:profil_peserta,nim,' . $profil->id,
+                'universitas' => 'nullable|string|max:255',
+                'jurusan' => 'nullable|string|max:255',
+                'no_hp' => 'nullable|string|max:20',
                 'alamat' => 'nullable|string',
+                'tambahan' => 'nullable',
             ]);
         }
 
