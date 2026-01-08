@@ -61,7 +61,7 @@ class ProfilPesertaController extends Controller
             'jurusan' => 'nullable|string|max:255',
             'no_hp' => 'nullable|string|max:20',
             'alamat' => 'nullable|string',
-            'tambahan' => 'nullable',
+
         ]);
 
         ProfilPeserta::create($data);
@@ -113,7 +113,7 @@ class ProfilPesertaController extends Controller
                 'jurusan' => 'nullable|string|max:255',
                 'no_hp' => 'nullable|string|max:20',
                 'alamat' => 'nullable|string',
-                'tambahan' => 'nullable',
+
             ]);
             $data['user_id'] = $profil->user_id; // Keep original
         } elseif ($user->role === 'pembimbing') {
@@ -130,7 +130,7 @@ class ProfilPesertaController extends Controller
                 'jurusan' => 'nullable|string|max:255',
                 'no_hp' => 'nullable|string|max:20',
                 'alamat' => 'nullable|string',
-                'tambahan' => 'nullable',
+
             ]);
             $data['user_id'] = $profil->user_id; // Keep original
         } else {
@@ -143,7 +143,7 @@ class ProfilPesertaController extends Controller
                 'jurusan' => 'nullable|string|max:255',
                 'no_hp' => 'nullable|string|max:20',
                 'alamat' => 'nullable|string',
-                'tambahan' => 'nullable',
+
             ]);
         }
 

@@ -19,7 +19,6 @@ class ProfilPeserta extends Model
         'jurusan',
         'no_telepon',
         'alamat',
-        'tambahan',
     ];
 
     public function user()

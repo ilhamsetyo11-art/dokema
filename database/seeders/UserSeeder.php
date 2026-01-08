@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
         // Admin/HR Users
         User::create([
             'name' => 'Admin HR',
-            'email' => 'admin@telkomakses.co.id',
+            'email' => 'hrd@telkomakses.co.id',
             'password' => Hash::make('password'),
             'role' => 'hr',
             'email_verified_at' => now(),

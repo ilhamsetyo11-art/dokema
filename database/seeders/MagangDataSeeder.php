@@ -224,7 +224,7 @@ class MagangDataSeeder extends Seeder
         while ($current->lte($tanggalSelesai)) {
             // Skip weekend
             if ($current->isWeekday()) {
-                $statusVerifikasi = ['disetujui', 'disetujui', 'disetujui', 'revisi'][$laporanCount % 4]; // 75% disetujui
+                $statusVerifikasi = ['verified', 'verified', 'verified', 'rejected'][$laporanCount % 4]; // 75% verified
 
                 $laporan = LaporanKegiatan::create([
                     'data_magang_id' => $dataMagang->id,
@@ -234,9 +234,7 @@ class MagangDataSeeder extends Seeder
                     'status_verifikasi' => $statusVerifikasi,
                     'verified_by' => $dataMagang->pembimbing_id,
                     'verified_at' => $current->copy()->setTime(17, 0),
-                    'catatan_verifikasi' => $statusVerifikasi === 'disetujui'
-                        ? 'Laporan sudah sesuai dan lengkap. Pertahankan.'
-                        : 'Mohon tambahkan detail teknis yang lebih spesifik.',
+                    'catatan_verifikasi' => $statusVerifikasi === 'verified'
                 ]);
 
                 $laporanCount++;
