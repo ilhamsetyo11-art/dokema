@@ -41,7 +41,8 @@ class AuthController extends Controller
                 // dataMagang is hasMany, get first record
                 $dataMagang = $profilPeserta->dataMagang()->first() ?? null;
 
-                if (!$dataMagang || $dataMagang->workflow_status !== 'approved') {
+                // Only block login if status is 'submitted' (waiting HRD) or 'rejected'
+                if (!$dataMagang || in_array($dataMagang->workflow_status, ['submitted', 'rejected'])) {
                     Auth::logout();
                     $request->session()->invalidate();
                     $request->session()->regenerateToken();
