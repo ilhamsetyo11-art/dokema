@@ -25,7 +25,10 @@ class LaporanKegiatanController extends Controller
             if (!$dataMagang) {
                 return view('magang.laporan.index', ['laporan' => collect()]);
             }
-            $laporan = $dataMagang->laporanKegiatan()->latest()->paginate(10);
+            $laporan = $dataMagang->laporanKegiatan()
+                ->with('dataMagang.profilPeserta')
+                ->latest()
+                ->get();
         } elseif (Auth::user()->role === 'pembimbing') {
             // Pembimbing hanya bisa lihat laporan dari peserta yang dibimbing
             $magangDibimbing = Auth::user()->magangDibimbing;
@@ -35,10 +38,14 @@ class LaporanKegiatanController extends Controller
             $laporan = LaporanKegiatan::whereIn(
                 'data_magang_id',
                 $magangDibimbing->pluck('id')
-            )->latest()->paginate(10);
+            )->with('dataMagang.profilPeserta')
+                ->latest()
+                ->get();
         } else {
             // HR bisa lihat semua laporan
-            $laporan = LaporanKegiatan::latest()->paginate(10);
+            $laporan = LaporanKegiatan::with('dataMagang.profilPeserta')
+                ->latest()
+                ->get();
         }
 
         return view('magang.laporan.index', compact('laporan'));
@@ -246,7 +253,7 @@ class LaporanKegiatanController extends Controller
             if (!$dataMagang || $laporan->data_magang_id !== $dataMagang->id) {
                 abort(403, 'Unauthorized');
             }
-            
+
             // Magang hanya bisa hapus jika status masih pending
             if ($laporan->status_verifikasi !== 'pending') {
                 return redirect()->route('laporan.index')
