@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('settings', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger('id')->primary();
             $table->string('key')->unique();
             $table->text('value');
             $table->string('type')->default('string'); // string, int, bool, json
@@ -21,24 +21,19 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Insert default settings
-        DB::table('settings')->insert([
-            [
-                'key' => 'magang_quota',
-                'value' => '20',
-                'type' => 'int',
-                'description' => 'Maksimal kuota penerimaan magang',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'key' => 'auto_assign_supervisor',
-                'value' => '1',
-                'type' => 'bool',
-                'description' => 'Otomatis assign pembimbing saat approval',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+        // Insert default settings using the model to trigger ID generation
+        \App\Models\Setting::create([
+            'key' => 'magang_quota',
+            'value' => '20',
+            'type' => 'int',
+            'description' => 'Maksimal kuota penerimaan magang',
+        ]);
+
+        \App\Models\Setting::create([
+            'key' => 'auto_assign_supervisor',
+            'value' => '1',
+            'type' => 'bool',
+            'description' => 'Otomatis assign pembimbing saat approval',
         ]);
     }
 

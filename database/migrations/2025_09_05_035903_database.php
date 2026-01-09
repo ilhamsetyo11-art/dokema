@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('profil_peserta', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->unsignedBigInteger('id')->primary();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('nim')->unique();
             $table->string('universitas');
             $table->string('jurusan');
@@ -23,9 +24,11 @@ return new class extends Migration
         });
 
         Schema::create('data_magang', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('profil_peserta_id')->constrained('profil_peserta')->onDelete('cascade');
-            $table->foreignId('pembimbing_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->unsignedBigInteger('id')->primary();
+            $table->unsignedBigInteger('profil_peserta_id');
+            $table->foreign('profil_peserta_id')->references('id')->on('profil_peserta')->onDelete('cascade');
+            $table->unsignedBigInteger('pembimbing_id')->nullable();
+            $table->foreign('pembimbing_id')->references('id')->on('users')->onDelete('set null');
             $table->string('path_surat_permohonan');
             $table->string('path_surat_balasan')->nullable();
             $table->date('tanggal_mulai');
@@ -35,8 +38,9 @@ return new class extends Migration
         });
 
         Schema::create('laporan_kegiatan', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('data_magang_id')->constrained('data_magang')->onDelete('cascade');
+            $table->unsignedBigInteger('id')->primary();
+            $table->unsignedBigInteger('data_magang_id');
+            $table->foreign('data_magang_id')->references('id')->on('data_magang')->onDelete('cascade');
             $table->date('tanggal_laporan');
             $table->text('deskripsi');
             $table->string('path_lampiran')->nullable();
@@ -47,8 +51,9 @@ return new class extends Migration
         });
 
         Schema::create('log_bimbingan', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('data_magang_id')->constrained('data_magang')->onDelete('cascade');
+            $table->unsignedBigInteger('id')->primary();
+            $table->unsignedBigInteger('data_magang_id');
+            $table->foreign('data_magang_id')->references('id')->on('data_magang')->onDelete('cascade');
             $table->datetime('waktu_bimbingan');
             $table->text('catatan_peserta')->nullable();
             $table->text('catatan_pembimbing')->nullable();
@@ -56,8 +61,9 @@ return new class extends Migration
         });
 
         Schema::create('penilaian_akhir', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('data_magang_id')->constrained('data_magang')->onDelete('cascade');
+            $table->unsignedBigInteger('id')->primary();
+            $table->unsignedBigInteger('data_magang_id');
+            $table->foreign('data_magang_id')->references('id')->on('data_magang')->onDelete('cascade');
             $table->decimal('nilai', 5, 2);
             $table->text('umpan_balik')->nullable();
             $table->string('path_surat_nilai')->nullable();

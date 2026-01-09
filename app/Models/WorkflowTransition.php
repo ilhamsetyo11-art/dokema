@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\GeneratesDateBasedId;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 class WorkflowTransition extends Model
 {
+    use GeneratesDateBasedId;
+
     protected $fillable = [
         'data_magang_id',
         'from_status',

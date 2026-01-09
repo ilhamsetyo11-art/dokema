@@ -12,11 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('workflow_transitions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('data_magang_id')->constrained('data_magang')->onDelete('cascade');
+            $table->unsignedBigInteger('id')->primary();
+            $table->unsignedBigInteger('data_magang_id');
+            $table->foreign('data_magang_id')->references('id')->on('data_magang')->onDelete('cascade');
             $table->string('from_status')->nullable();
             $table->string('to_status');
-            $table->foreignId('triggered_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->unsignedBigInteger('triggered_by')->nullable();
+            $table->foreign('triggered_by')->references('id')->on('users')->onDelete('set null');
             $table->text('notes')->nullable();
             $table->json('metadata')->nullable(); // For storing additional context
             $table->timestamps();

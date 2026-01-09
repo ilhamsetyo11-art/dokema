@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\GeneratesDateBasedId;
 use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
+    use GeneratesDateBasedId;
+
     protected $fillable = ['key', 'value', 'type', 'description'];
 
     /**

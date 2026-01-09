@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\GeneratesDateBasedId;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class LaporanKegiatan extends Model
 {
-    use HasFactory;
+    use HasFactory, GeneratesDateBasedId;
 
     protected $table = 'laporan_kegiatan';
 

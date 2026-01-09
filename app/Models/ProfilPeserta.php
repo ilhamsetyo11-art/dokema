@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\GeneratesDateBasedId;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ProfilPeserta extends Model
 {
-    use HasFactory;
+    use HasFactory, GeneratesDateBasedId;
 
     protected $table = 'profil_peserta';
 

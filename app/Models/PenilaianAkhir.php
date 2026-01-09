@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\GeneratesDateBasedId;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class PenilaianAkhir extends Model
 {
-    use HasFactory;
+    use HasFactory, GeneratesDateBasedId;
 
     protected $table = 'penilaian_akhir';
 
